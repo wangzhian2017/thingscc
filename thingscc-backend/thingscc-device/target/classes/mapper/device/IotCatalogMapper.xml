@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thingscc.device.mapper.IotCatalogMapper">
+    
+    <resultMap type="IotCatalog" id="IotCatalogResult">
+        <result property="catalogId"    column="catalog_id"    />
+        <result property="catalogName"    column="catalog_name"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectIotCatalogVo">
+        select catalog_id, catalog_name, parent_id, create_by, create_time, update_by, update_time, remark from iot_catalog
+    </sql>
+
+    <select id="selectIotCatalogList" parameterType="IotCatalog" resultMap="IotCatalogResult">
+        <include refid="selectIotCatalogVo"/>
+        <where>  
+            <if test="catalogName != null  and catalogName != ''"> and catalog_name like concat('%', #{catalogName}, '%')</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+        </where>
+    </select>
+    
+    <select id="selectIotCatalogByCatalogId" parameterType="Long" resultMap="IotCatalogResult">
+        <include refid="selectIotCatalogVo"/>
+        where catalog_id = #{catalogId}
+    </select>
+        
+    <insert id="insertIotCatalog" parameterType="IotCatalog" useGeneratedKeys="true" keyProperty="catalogId">
+        insert into iot_catalog
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="catalogName != null and catalogName != ''">catalog_name,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            create_time,
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="catalogName != null and catalogName != ''">#{catalogName},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            sysdate(),
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateIotCatalog" parameterType="IotCatalog">
+        update iot_catalog
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="catalogName != null and catalogName != ''">catalog_name = #{catalogName},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            update_time = sysdate(),
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where catalog_id = #{catalogId}
+    </update>
+
+    <delete id="deleteIotCatalogByCatalogId" parameterType="Long">
+        delete from iot_catalog where catalog_id = #{catalogId}
+    </delete>
+
+    <delete id="deleteIotCatalogByCatalogIds" parameterType="String">
+        delete from iot_catalog where catalog_id in 
+        <foreach item="catalogId" collection="array" open="(" separator="," close=")">
+            #{catalogId}
+        </foreach>
+    </delete>
+</mapper>
