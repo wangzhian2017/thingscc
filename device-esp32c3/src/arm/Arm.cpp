@@ -7,7 +7,7 @@ Arm::Arm(/* args */)
 {
    grab_joint=new ServoJoint("grab",0,1,0,122);//new ServoJoint("grab",0,1,30,120);
    lift_joint=new ServoJoint("lift",1,2,10,95);
-   backforward_joint= new ServoJoint("backforward",2,3,75,180);
+   backforward_joint= new ServoJoint("backforward",2,3,75,160);
    rotate_joint= new ServoJoint("rotate",3,10);
 }
 
