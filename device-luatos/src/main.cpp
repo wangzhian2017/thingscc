@@ -2,6 +2,9 @@
 
 void setup() {
   Serial.begin(115200);
+
+  pinMode(12,OUTPUT);
+  pinMode(13,OUTPUT);
 }
 
 void loop() {
