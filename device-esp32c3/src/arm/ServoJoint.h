@@ -5,15 +5,17 @@
 
 class ServoJoint : public IJoint{
 public:
-    ServoJoint(const char *name,int channel,int pin,float minAngle=0,float maxAngle=180
+    ServoJoint(const char *name,int pin,float minAngle=0,float maxAngle=180
                 ,int resolution=10,int freq=50,float min_pulse_time=0.2,float max_pulse_time=2.5);
-    float act();
+     ~ServoJoint();
+    float execute();
     float actToAngle(float angle,bool immediately=false);
-    float actToRatio(float ratio);
     float getAngle();
     int   getDirection();
+    
 private:
     float calculatePWM(float degree);
+    static int total_servo;
 
     const char *name;
     int freq;//舵机频率

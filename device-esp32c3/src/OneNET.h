@@ -23,27 +23,19 @@
 #define ONENET_TOPIC_DESIRED_DEL "$sys/%s/%s/thing/property/desired/delete"
 //设备期望值删除响应主题
 #define ONENET_TOPIC_DESIRED_DEL_RE "$sys/%s/%s/thing/property/desired/delete/reply"
-//抓住  平台调用直连设备服务(下发数据并期望设备执行完成后给出响应)
+//爪子张合  平台调用直连设备服务(下发数据并期望设备执行完成后给出响应)
 #define ONENET_TOPIC_SERVICE_GRAB "$sys/%s/%s/thing/service/grab/invoke"
 #define ONENET_TOPIC_SERVICE_GRAB_RE "$sys/%s/%s/thing/service/grab/invoke_reply"
-//上抬
-#define ONENET_TOPIC_SERVICE_UPLIFT "$sys/%s/%s/thing/service/uplift/invoke"
-#define ONENET_TOPIC_SERVICE_UPLIFT_RE "$sys/%s/%s/thing/service/uplift/invoke_reply"
-//下放
-#define ONENET_TOPIC_SERVICE_PUTDOWN "$sys/%s/%s/thing/service/putdown/invoke"
-#define ONENET_TOPIC_SERVICE_PUTDOWN_RE "$sys/%s/%s/thing/service/putdown/invoke_reply"
-//左转
-#define ONENET_TOPIC_SERVICE_TURNLEFT "$sys/%s/%s/thing/service/turnleft/invoke"
-#define ONENET_TOPIC_SERVICE_TURNLEFT_RE "$sys/%s/%s/thing/service/turnleft/invoke_reply"
-//左转
-#define ONENET_TOPIC_SERVICE_TURNRIGHT "$sys/%s/%s/thing/service/turnright/invoke"
-#define ONENET_TOPIC_SERVICE_TURNRIGHT_RE "$sys/%s/%s/thing/service/turnright/invoke_reply"
+//上下转动
+#define ONENET_TOPIC_SERVICE_LIFT "$sys/%s/%s/thing/service/lift/invoke"
+#define ONENET_TOPIC_SERVICE_LIFT_RE "$sys/%s/%s/thing/service/lift/invoke_reply"
+//左右转动
+#define ONENET_TOPIC_SERVICE_ROTATE "$sys/%s/%s/thing/service/rotate/invoke"
+#define ONENET_TOPIC_SERVICE_ROTATE_RE "$sys/%s/%s/thing/service/rotate/invoke_reply"
 //前倾
-#define ONENET_TOPIC_SERVICE_FORERAKE "$sys/%s/%s/thing/service/forerake/invoke"
-#define ONENET_TOPIC_SERVICE_FORERAKE_RE "$sys/%s/%s/thing/service/forerake/invoke_reply"
-//后仰
-#define ONENET_TOPIC_SERVICE_TILTBACK "$sys/%s/%s/thing/service/tiltback/invoke"
-#define ONENET_TOPIC_SERVICE_TILTBACK_RE "$sys/%s/%s/thing/service/tiltback/invoke_reply"
+#define ONENET_TOPIC_SERVICE_BACKFORWARD "$sys/%s/%s/thing/service/backforward/invoke"
+#define ONENET_TOPIC_SERVICE_BACKFORWARD_RE "$sys/%s/%s/thing/service/backforward/invoke_reply"
+
 
 //这是post上传数据使用的模板
 #define ONENET_POST_BODY_FORMAT "{\"id\":\"%u\",\"version\":\"1.0\",\"params\":%s}"

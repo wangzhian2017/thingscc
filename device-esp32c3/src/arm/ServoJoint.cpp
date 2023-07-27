@@ -1,11 +1,12 @@
 #include "ServoJoint.h"
 #include <Arduino.h>
 
+int ServoJoint::total_servo=0;
 
-ServoJoint::ServoJoint(const char *name,int channel,int pin,float minAngle,float maxAngle
+ServoJoint::ServoJoint(const char *name,int pin,float minAngle,float maxAngle
                         ,int resolution,int freq,float min_pulse_time,float max_pulse_time){
     this->name=name;
-    this->channel=channel;
+    this->channel=total_servo;
     this->pin=pin;
     if(minAngle<=maxAngle){
         this->min_angle=minAngle;
@@ -28,6 +29,12 @@ ServoJoint::ServoJoint(const char *name,int channel,int pin,float minAngle,float
     ledcSetup(channel, freq, resolution); 
     // 将通道与对应的引脚连接
     ledcAttachPin(pin, channel); 
+
+    total_servo++;
+}
+
+ServoJoint::~ServoJoint(){
+    
 }
 
 float ServoJoint::actToAngle(float angle,bool immediately){
@@ -40,24 +47,9 @@ float ServoJoint::actToAngle(float angle,bool immediately){
     return  this->angle;
 }
 
-float ServoJoint::actToRatio(float ratio){
-    if(ratio<0)
-    {
-        ratio=0;
-    }else if (ratio>1)
-    {
-        ratio=1;
-    }
-    this->expect_angle=this->min_angle+ratio*(this->max_angle-this->min_angle);
 
-    Serial.print("ratio:");
-    Serial.print(ratio);
-    Serial.print(";expect_angle:");
-    Serial.println(this->expect_angle);
-    return  this->angle;
-}
 
-float ServoJoint::act(){
+float ServoJoint::execute(){
     if(this->expect_angle!=this->angle){
         int diff=this->expect_angle-this->angle;
         if(diff > 0-this->inc_angle && diff < this->inc_angle)

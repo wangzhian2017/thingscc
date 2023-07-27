@@ -58,22 +58,13 @@ void OneNET::subscribe(){
     sprintf(topic, ONENET_TOPIC_SERVICE_GRAB, this->user_name, this->client_id);
     Serial.println(topic);
     this->mqtt_client.subscribe(topic);
-    sprintf(topic, ONENET_TOPIC_SERVICE_UPLIFT, this->user_name, this->client_id);
+    sprintf(topic, ONENET_TOPIC_SERVICE_LIFT, this->user_name, this->client_id);
     Serial.println(topic);
     this->mqtt_client.subscribe(topic);
-    sprintf(topic, ONENET_TOPIC_SERVICE_PUTDOWN, this->user_name, this->client_id);
+    sprintf(topic, ONENET_TOPIC_SERVICE_ROTATE, this->user_name, this->client_id);
     Serial.println(topic);
     this->mqtt_client.subscribe(topic);
-    sprintf(topic, ONENET_TOPIC_SERVICE_TURNLEFT, this->user_name, this->client_id);
-    Serial.println(topic);
-    this->mqtt_client.subscribe(topic);
-    sprintf(topic, ONENET_TOPIC_SERVICE_TURNRIGHT, this->user_name, this->client_id);
-    Serial.println(topic);
-    this->mqtt_client.subscribe(topic);
-    sprintf(topic, ONENET_TOPIC_SERVICE_FORERAKE, this->user_name, this->client_id);
-    Serial.println(topic);
-    this->mqtt_client.subscribe(topic);
-    sprintf(topic, ONENET_TOPIC_SERVICE_TILTBACK, this->user_name, this->client_id);
+    sprintf(topic, ONENET_TOPIC_SERVICE_BACKFORWARD, this->user_name, this->client_id);
     Serial.println(topic);
     this->mqtt_client.subscribe(topic);
 }
@@ -136,9 +127,9 @@ void OneNET::callback(char *topic, byte *payload, unsigned int length,Arm arm){
     {
         String id = objJSON["id"];
         Serial.println(id);
-        String s=objJSON["params"]["angle_ratio"];
-        float angle_ratio=s.toFloat();
-        float angle=arm.grab(angle_ratio);
+        String s=objJSON["params"]["angle"];
+        float angle=s.toFloat();
+        float ret=arm.grab(angle);
         
         char sendbuf[100];
         sprintf(sendbuf, "{\"id\": \"%s\",\"code\":200,\"msg\":\"success\",\"data\":{\"result\":%s}}", id.c_str(), "true");
@@ -146,97 +137,51 @@ void OneNET::callback(char *topic, byte *payload, unsigned int length,Arm arm){
         sprintf(re, ONENET_TOPIC_SERVICE_GRAB_RE, this->user_name, this->client_id);
         this->mqtt_client.publish(re, sendbuf);
     }
-    sprintf(target, ONENET_TOPIC_SERVICE_UPLIFT, this->user_name, this->client_id);
+    sprintf(target, ONENET_TOPIC_SERVICE_LIFT, this->user_name, this->client_id);
     if (strstr(topic, target))
     {
         String id = objJSON["id"];
         Serial.println(id);
-        String s=objJSON["params"]["angle_ratio"];
-        float angle_ratio=s.toFloat();
-        float angle=arm.lift(angle_ratio);
+        String s=objJSON["params"]["angle"];
+        float angle=s.toFloat();
+        float ret=arm.lift(angle);
 
         char sendbuf[100];
-        sprintf(sendbuf, "{\"id\": \"%s\",\"code\":200,\"msg\":\"success\",\"data\":{\"result\":%f}}", id.c_str(), angle);
+        sprintf(sendbuf, "{\"id\": \"%s\",\"code\":200,\"msg\":\"success\",\"data\":{\"result\":%f}}", id.c_str(), ret);
         Serial.println(sendbuf);
-        sprintf(re, ONENET_TOPIC_SERVICE_UPLIFT_RE, this->user_name, this->client_id);
+        sprintf(re, ONENET_TOPIC_SERVICE_LIFT_RE, this->user_name, this->client_id);
         this->mqtt_client.publish(re, sendbuf);
     }
-    sprintf(target, ONENET_TOPIC_SERVICE_PUTDOWN, this->user_name, this->client_id);
+    sprintf(target, ONENET_TOPIC_SERVICE_ROTATE, this->user_name, this->client_id);
     if (strstr(topic, target))
     {
         String id = objJSON["id"];
         Serial.println(id);
-        String s=objJSON["params"]["angle_ratio"];
-        float angle_ratio=s.toFloat();
-        float angle=arm.lift(angle_ratio);
+        String s=objJSON["params"]["angle"];
+        float angle=s.toFloat();
+        float ret=arm.rotate(angle);
         
         char sendbuf[100];
-        sprintf(sendbuf, "{\"id\": \"%s\",\"code\":200,\"msg\":\"success\",\"data\":{\"result\":%f}}", id.c_str(), angle);
+        sprintf(sendbuf, "{\"id\": \"%s\",\"code\":200,\"msg\":\"success\",\"data\":{\"result\":%f}}", id.c_str(), ret);
         Serial.println(sendbuf);
-        sprintf(re, ONENET_TOPIC_SERVICE_PUTDOWN_RE, this->user_name, this->client_id);
+        sprintf(re, ONENET_TOPIC_SERVICE_ROTATE_RE, this->user_name, this->client_id);
         this->mqtt_client.publish(re, sendbuf);
     }
-    sprintf(target, ONENET_TOPIC_SERVICE_TURNLEFT, this->user_name, this->client_id);
+    sprintf(target, ONENET_TOPIC_SERVICE_BACKFORWARD, this->user_name, this->client_id);
     if (strstr(topic, target))
     {
         String id = objJSON["id"];
         Serial.println(id);
-        String s=objJSON["params"]["angle_ratio"];
-        float angle_ratio=s.toFloat();
-        float angle=arm.rotate(angle_ratio);
+        String s=objJSON["params"]["angle"];
+        float angle=s.toFloat();
+        float ret=arm.backforward(angle);
 
         char sendbuf[100];
-        sprintf(sendbuf, "{\"id\": \"%s\",\"code\":200,\"msg\":\"success\",\"data\":{\"result\":%f}}", id.c_str(), angle);
+        sprintf(sendbuf, "{\"id\": \"%s\",\"code\":200,\"msg\":\"success\",\"data\":{\"result\":%f}}", id.c_str(), ret);
         Serial.println(sendbuf);
-        sprintf(re, ONENET_TOPIC_SERVICE_TURNLEFT_RE, this->user_name, this->client_id);
+        sprintf(re, ONENET_TOPIC_SERVICE_BACKFORWARD_RE, this->user_name, this->client_id);
         this->mqtt_client.publish(re, sendbuf);
     }
-    sprintf(target, ONENET_TOPIC_SERVICE_TURNRIGHT, this->user_name, this->client_id);
-    if (strstr(topic, target))
-    {
-        String id = objJSON["id"];
-        Serial.println(id);
-        String s=objJSON["params"]["angle_ratio"];
-        float angle_ratio=s.toFloat();
-        float angle=arm.rotate(angle_ratio);
-           
-        char sendbuf[100];
-        sprintf(sendbuf, "{\"id\": \"%s\",\"code\":200,\"msg\":\"success\",\"data\":{\"result\":%f}}", id.c_str(),angle);
-        Serial.println(sendbuf);
-        sprintf(re, ONENET_TOPIC_SERVICE_TURNRIGHT_RE, this->user_name, this->client_id);
-        this->mqtt_client.publish(re, sendbuf);
-    }
-    sprintf(target, ONENET_TOPIC_SERVICE_FORERAKE, this->user_name, this->client_id);
-    if (strstr(topic, target))
-    {
-        String id = objJSON["id"];
-        Serial.println(id);
-        String s=objJSON["params"]["angle_ratio"];
-        float angle_ratio=s.toFloat();
-        float angle=arm.backforward(angle_ratio);
-
-        char sendbuf[100];
-        sprintf(sendbuf, "{\"id\": \"%s\",\"code\":200,\"msg\":\"success\",\"data\":{\"result\":%f}}", id.c_str(), angle);
-        Serial.println(sendbuf);
-        sprintf(re, ONENET_TOPIC_SERVICE_FORERAKE_RE, this->user_name, this->client_id);
-        this->mqtt_client.publish(re, sendbuf);
-    }
-    sprintf(target, ONENET_TOPIC_SERVICE_TILTBACK, this->user_name, this->client_id);
-    if (strstr(topic, target))
-    {
-        String id = objJSON["id"];
-        Serial.println(id);
-        String s=objJSON["params"]["angle_ratio"];
-        float angle_ratio=s.toFloat();
-        float angle=arm.backforward(angle_ratio);
-
-        char sendbuf[100];
-        sprintf(sendbuf, "{\"id\": \"%s\",\"code\":200,\"msg\":\"success\",\"data\":{\"result\":%f}}", id.c_str(), angle);
-        Serial.println(sendbuf);
-        sprintf(re, ONENET_TOPIC_SERVICE_TILTBACK_RE, this->user_name, this->client_id);
-        this->mqtt_client.publish(re, sendbuf);
-    }
-
 }
 
 void OneNET::sendArmReport(Arm arm){

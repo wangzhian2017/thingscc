@@ -5,31 +5,31 @@
 
 Arm::Arm(/* args */)
 {
-   grab_joint=new ServoJoint("grab",0,1,0,122);//new ServoJoint("grab",0,1,30,120);
-   lift_joint=new ServoJoint("lift",1,2,10,95);
-   backforward_joint= new ServoJoint("backforward",2,3,75,160);
-   rotate_joint= new ServoJoint("rotate",3,10);
+   grab_joint=new ServoJoint("grab",1,0,122);//new ServoJoint("grab",0,1,30,120);
+   lift_joint=new ServoJoint("lift",2,10,95);
+   backforward_joint= new ServoJoint("backforward",3,75,160);
+   rotate_joint= new ServoJoint("rotate",10);
 }
 
 Arm::~Arm()
 {
 }
 
-float Arm::grab(float angle_ratio){
-    float angle=grab_joint->actToRatio(angle_ratio);
-    return angle;
+float Arm::grab(float angle){
+    float result=grab_joint->actToAngle(angle);
+    return result;
 }
-float Arm::lift(float angle_ratio){
-     float angle=lift_joint->actToRatio(angle_ratio);
-     return angle;
+float Arm::lift(float angle){
+     float result=lift_joint->actToAngle(angle);
+     return result;
 }
-float Arm::backforward(float angle_ratio){
-     float angle=backforward_joint->actToRatio(angle_ratio);
-     return angle;
+float Arm::backforward(float angle){
+     float result=backforward_joint->actToAngle(angle);
+     return result;
 }
-float Arm::rotate(float angle_ratio){
-     float angle=rotate_joint->actToRatio(angle_ratio);
-     return angle;
+float Arm::rotate(float angle){
+     float result=rotate_joint->actToAngle(angle);
+     return result;
 }
 float Arm::getGrabAngle(){
     return grab_joint->getAngle();
@@ -53,10 +53,10 @@ void Arm::initialization(float angle_grab,float angle_lift,float angle_rotate,fl
 }
 void Arm::act(){
     //Serial.println("Arm act");
-    grab_joint->act();
-    rotate_joint->act();
+    grab_joint->execute();
+    rotate_joint->execute();
 
-    //由于购买的机械臂 上下轴 与 前后轴 相互限制，所有使用以下代码控制
+    //由于购买的机械臂 上下轴 与 前后轴 相互限制，所以使用以下代码控制
     int lift_direction=lift_joint->getDirection();
     int backforward_direction=backforward_joint->getDirection();
     float lift_angle=lift_joint->getAngle();
@@ -65,15 +65,19 @@ void Arm::act(){
     if(lift_direction<0||backforward_direction<0){
         //两轴夹角正在变小
         if(included_angle>80){
-            lift_joint->act();
-            backforward_joint->act();
+            lift_joint->execute();
+            backforward_joint->execute();
+        }else{
+            //Serial.println("两轴夹角太小");
         }
     }
     if(lift_direction>0||backforward_direction>0){
         //两轴夹角正在变大
         if(included_angle<130){
-            lift_joint->act();
-            backforward_joint->act();
+            lift_joint->execute();
+            backforward_joint->execute();
+        }else{
+            //Serial.println("两轴夹角太大");
         }
     }
     

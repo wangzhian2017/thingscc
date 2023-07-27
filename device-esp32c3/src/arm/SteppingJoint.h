@@ -26,8 +26,7 @@ public:
     ~SteppingJoint();
 
     float actToAngle(float angle,bool immediately=false);
-    float actToRatio(float ratio);
-    float act();
+    float execute();
     float getAngle();
     int   getDirection();
 };

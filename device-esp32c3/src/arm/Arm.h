@@ -15,10 +15,10 @@ public:
     Arm(/* args */);
     ~Arm();
 
-    float grab(float angle_ratio);
-    float lift(float angle_ratio);
-    float backforward(float angle_ratio);
-    float rotate(float angle_ratio);
+    float grab(float angle);
+    float lift(float angle);
+    float backforward(float angle);
+    float rotate(float angle);
     float getGrabAngle();
     float getLiftAngle();
     float getBackforwardAngle();

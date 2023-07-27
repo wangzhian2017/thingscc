@@ -75,10 +75,8 @@ float SteppingJoint::actToAngle(float angle,bool immediately){
     }
     return angle;
 }
-float SteppingJoint::actToRatio(float ratio){
-    return angle;
-}
-float SteppingJoint::act(){
+
+float SteppingJoint::execute(){
     return angle;
 }
 float SteppingJoint::getAngle(){

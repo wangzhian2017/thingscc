@@ -47,54 +47,35 @@ def call_service_task():
             call_service(obj["identifier"],obj["param"])
             backforward_queue.task_done()
 
-def grab(ratio):
-    ratio=round(ratio,2)
-    param={'angle_ratio':ratio}
+def grab(angle):
+    angle=round(angle,2)
+    param={'angle':angle}
     #return call_service('grab',param)
     if grab_queue.full()==False:
         grab_queue.put({"identifier":"grab","param":param})
 
-def uplift(ratio):
-    ratio=round(ratio,2)
-    param={'angle_ratio':ratio}
-    #return call_service('uplift',param)
+def lift(angle):
+    angle=round(angle,2)
+    param={'angle':angle}
+    #return call_service('lift',param)
     if lift_queue.full()==False:
-        lift_queue.put({"identifier":"uplift","param":param})
+        lift_queue.put({"identifier":"lift","param":param})
 
-def putdown(ratio):
-    ratio=round(ratio,2)
-    param={'angle_ratio':ratio}
-    #return call_service('putdown',param)
-    if lift_queue.full()==False:
-        lift_queue.put({"identifier":"putdown","param":param})
 
-def turnleft(ratio):
-    ratio=round(ratio,2)
-    param={'angle_ratio':ratio}
-    #return call_service('turnleft',param)
+def rotate(angle):
+    angle=round(angle,2)
+    param={'angle':angle}
+    #return call_service('rotate',param)
     if rotate_queue.full()==False:
-        rotate_queue.put({"identifier":"turnleft","param":param})
+        rotate_queue.put({"identifier":"rotate","param":param})
 
-def turnright(ratio):
-    ratio=round(ratio,2)
-    param={'angle_ratio':ratio}
-    #return call_service('turnright',param)
-    if rotate_queue.full()==False:
-        rotate_queue.put({"identifier":"turnright","param":param})
-
-def forerake(ratio):
-    ratio=round(ratio,2)
-    param={'angle_ratio':ratio}
-    #return call_service('forerake',param)
+def backforward(angle):
+    angle=round(angle,2)
+    param={'angle':angle}
+    #return call_service('backforward',param)
     if backforward_queue.full()==False:
-        backforward_queue.put({"identifier":"forerake","param":param})
+        backforward_queue.put({"identifier":"backforward","param":param})
 
-def tiltback(ratio):
-    ratio=round(ratio,2)
-    param={'angle_ratio':ratio}
-    #return call_service('tiltback',param)
-    if backforward_queue.full()==False:
-        backforward_queue.put({"identifier":"tiltback","param":param})
 
 pre_time = 0
 cur_time = 0
@@ -115,21 +96,21 @@ def process(hd,frame_shape,center,width,min_pinch):
         else:
             max_y=center_y+7*h/8
         x,y=hd.point(0) #掌心位置
-        ratio=np.interp(x,[min_x,max_x],[1,0])
-        turnleft(ratio)
-        ratio=np.interp(y,[min_y,max_y],[1,0])
-        uplift(ratio)
+        angle=np.interp(x,[min_x,max_x],[180,0])
+        rotate(angle)
+        angle=np.interp(y,[min_y,max_y],[95,10])
+        lift(angle)
         #手掌宽度
-        min_palm_width=width-width/20
+        min_palm_width=width-width/10
         max_palm_width=width+width/4
         palm_width=hd.distance(5,17)#手掌四指宽度
-        ratio=np.interp(palm_width,[min_palm_width,max_palm_width],[0,1])
-        forerake(ratio)
+        angle=np.interp(palm_width,[min_palm_width,max_palm_width],[75,140])
+        backforward(angle)
         #食指与拇指 捏在一起的程度
         pinch=hd.distance(8,4)
         max_pinch=2*hd.distance(17,0)
-        ratio=np.interp(pinch,[min_pinch,max_pinch],[1,0])
-        grab(ratio)
+        angle=np.interp(pinch,[min_pinch,max_pinch],[122,0])
+        grab(angle)
 
         pre_time=cur_time
 
