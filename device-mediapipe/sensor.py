@@ -140,6 +140,7 @@ def main():
                 hand_width=hd.distance(5,17) #手掌四指宽度
                 pinch=hd.distance(8,4) #食指与拇指 捏在一起的最小距离
                 ready=True
+                print("Ready GO!")
 
             if ready:
                 process(hd,frame.shape,hand_center,hand_width,pinch)
