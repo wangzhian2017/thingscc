@@ -88,21 +88,21 @@ def process(hd,frame_shape,center,width,min_pinch):
         min_x,min_y=0,0
         max_x,max_y=w,h
         if center_x>w/2:
-            min_x=center_x-w/2
+            min_x=center_x-w
         else:
-            max_x=w/2+center_x
+            max_x=center_x+w
         if center_y>h/2:
             min_y=center_y-h/8
         else:
             max_y=center_y+7*h/8
-        x,y=hd.point(0) #掌心位置
+        x,y=hd.point(5) #掌心位置
         angle=np.interp(x,[min_x,max_x],[180,0])
         rotate(angle)
         angle=np.interp(y,[min_y,max_y],[95,10])
         lift(angle)
         #手掌宽度
-        min_palm_width=width-width/10
-        max_palm_width=width+width/4
+        min_palm_width=3*width/4
+        max_palm_width=7*width/4
         palm_width=hd.distance(5,17)#手掌四指宽度
         angle=np.interp(palm_width,[min_palm_width,max_palm_width],[75,140])
         backforward(angle)
@@ -135,7 +135,7 @@ def main():
         frame = cv2.flip(frame, flipCode=1) 
         attach_result=hd.attach(frame)
         if attach_result:
-            if hd.is_ok():
+            if not ready and hd.is_ok():
                 hand_center=hd.point(0) #掌心位置
                 hand_width=hd.distance(5,17) #手掌四指宽度
                 pinch=hd.distance(8,4) #食指与拇指 捏在一起的最小距离
@@ -144,6 +144,8 @@ def main():
 
             if ready:
                 process(hd,frame.shape,hand_center,hand_width,pinch)
+        else:
+            ready=False
         
         cv2.imshow("sensor", frame)       #CV2窗体
         if cv2.waitKey(1)>0 :  #关闭窗体
