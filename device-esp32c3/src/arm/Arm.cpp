@@ -5,10 +5,10 @@
 
 Arm::Arm(/* args */)
 {
-   grab_joint=new ServoJoint("grab",1,0,122);//new ServoJoint("grab",0,1,30,120);
-   lift_joint=new ServoJoint("lift",2,10,95);
-   backforward_joint= new ServoJoint("backforward",3,75,160);
-   rotate_joint= new ServoJoint("rotate",10);
+   grab_joint=new ServoJoint("grab",4,0,122);//new ServoJoint("grab",0,1,30,120);
+   lift_joint=new ServoJoint("lift",5,10,95);
+   backforward_joint= new ServoJoint("backforward",6,75,160);
+   rotate_joint= new ServoJoint("rotate",7);
 }
 
 Arm::~Arm()
