@@ -1,50 +1,39 @@
 # -*- coding:utf-8 -*-
 import cv2
 import numpy as np
-import requests #  import grequests as requests
 from queue import Queue
 import threading
 from hand_detector import handdetector
 import time
+from mechanical_arm import mechanical_arm
 
-base_url="http://master.thingscc.com:8080"
+base_url="http://localhost:8080"
 product_id="iqDUVzCjyD"
 device_name="esp32c3"
-
-
+arm=mechanical_arm(base_url,product_id,device_name)
 
 grab_queue = Queue(3)
 lift_queue = Queue(3)
 rotate_queue = Queue(3)
 backforward_queue = Queue(3)
-def call_service(identifier,json_param):
-    try:
-        print(identifier,json_param)
-        url=base_url+"/device/onnet/service/"+product_id+"/"+device_name+"/"+identifier
-        r = requests.post(url,json = json_param, headers= {'Content-Type':'application/json;charset=UTF-8'})
-        # print(r.json())
-       
-        return r.json()
-    except:
-        print('call_service网络请求异常')
 
 def call_service_task():
     while True:
         if not grab_queue.empty() :
             obj = grab_queue.get()
-            call_service(obj["identifier"],obj["param"])
+            arm.grab(obj["param"]["angle"])
             grab_queue.task_done()
         if not lift_queue.empty() :
             obj = lift_queue.get()
-            call_service(obj["identifier"],obj["param"])
+            arm.lift(obj["param"]["angle"])
             lift_queue.task_done()
         if not rotate_queue.empty() :
             obj = rotate_queue.get()
-            call_service(obj["identifier"],obj["param"])
+            arm.rotate(obj["param"]["angle"])
             rotate_queue.task_done()
         if not backforward_queue.empty() :
             obj = backforward_queue.get()
-            call_service(obj["identifier"],obj["param"])
+            arm.backforward(obj["param"]["angle"])
             backforward_queue.task_done()
 
 def grab(angle):
