@@ -7,7 +7,7 @@ import threading
 from hand_detector import handdetector
 import time
 
-base_url="http://127.0.0.1:8080"
+base_url="http://master.thingscc.com:8080"
 product_id="iqDUVzCjyD"
 device_name="esp32c3"
 
