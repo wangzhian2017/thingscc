@@ -23,6 +23,7 @@ public:
     float getLiftAngle();
     float getBackforwardAngle();
     float getRotateAngle();
+    bool stopAll();
 
     void initialization(float angle_grab,float angle_lift,float angle_rotate,float angle_backforward);
     void act();

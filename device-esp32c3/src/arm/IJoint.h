@@ -9,6 +9,8 @@ public:
      virtual  float getAngle();
      //转动方向 0不转动 1正转 -1反转
      virtual  int   getDirection();
+
+     virtual  int   stop();
 };
 
 #endif

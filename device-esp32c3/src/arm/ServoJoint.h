@@ -12,6 +12,7 @@ public:
     float actToAngle(float angle,bool immediately=false);
     float getAngle();
     int   getDirection();
+    int   stop();
     
 private:
     float calculatePWM(float degree);

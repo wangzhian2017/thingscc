@@ -67,6 +67,9 @@ void OneNET::subscribe(){
     sprintf(topic, ONENET_TOPIC_SERVICE_BACKFORWARD, this->user_name, this->client_id);
     Serial.println(topic);
     this->mqtt_client.subscribe(topic);
+    sprintf(topic, ONENET_TOPIC_SERVICE_STOP, this->user_name, this->client_id);
+    Serial.println(topic);
+    this->mqtt_client.subscribe(topic);
 }
 void OneNET::setMQTTCallback(MQTT_CALLBACK_SIGNATURE){
     Serial.println("setMQTTCallback begin");
@@ -180,6 +183,19 @@ void OneNET::callback(char *topic, byte *payload, unsigned int length,Arm arm){
         sprintf(sendbuf, "{\"id\": \"%s\",\"code\":200,\"msg\":\"success\",\"data\":{\"result\":%f}}", id.c_str(), ret);
         Serial.println(sendbuf);
         sprintf(re, ONENET_TOPIC_SERVICE_BACKFORWARD_RE, this->user_name, this->client_id);
+        this->mqtt_client.publish(re, sendbuf);
+    }
+    sprintf(target, ONENET_TOPIC_SERVICE_STOP, this->user_name, this->client_id);
+    if (strstr(topic, target))
+    {
+        String id = objJSON["id"];
+        Serial.println(id);
+        bool ret=arm.stopAll();
+
+        char sendbuf[100];
+        sprintf(sendbuf, "{\"id\": \"%s\",\"code\":200,\"msg\":\"success\",\"data\":{\"result\":%s}}", id.c_str(), "true");
+        Serial.println(sendbuf);
+        sprintf(re, ONENET_TOPIC_SERVICE_STOP_RE, this->user_name, this->client_id);
         this->mqtt_client.publish(re, sendbuf);
     }
 }

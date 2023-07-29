@@ -96,3 +96,8 @@ int   SteppingJoint::getDirection(){
     }
     
 }
+
+int   SteppingJoint::stop(){
+    expect_angle=angle;
+    return angle;
+}

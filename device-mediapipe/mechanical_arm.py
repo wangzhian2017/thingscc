@@ -17,7 +17,7 @@ class mechanical_arm:
         
             return r.json()
         except:
-            print('call_service网络请求异常')
+            print('mechanical_arm.call_service网络请求异常')
 
     def grab(self,angle):
         angle=np.round(angle,2)
@@ -39,4 +39,7 @@ class mechanical_arm:
         param={'angle':angle}
         return self.call_service('backforward',param)
 
+    def stop(self):
+        param={}
+        return self.call_service('stop',param)
     

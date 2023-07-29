@@ -2,6 +2,13 @@ import pyaudio
 import wave
 import speech_recognition as sr
 import time
+from feishu import feishu
+from mechanical_arm import mechanical_arm
+
+base_url="http://localhost:8080"
+product_id="iqDUVzCjyD"
+device_name="esp32c3"
+arm=mechanical_arm(base_url,product_id,device_name)
 
 '''
     用Pyaudio库录制音频
@@ -62,16 +69,38 @@ def speech_recognition(fp, lang):
     r = r.recognize_sphinx(sudio,language=lang)
     return r
 
+
+def process(cmd): 
+    if "抓住" in cmd:
+        arm.grab(180.0)
+    if "松开" in cmd:
+        arm.grab(0.0)
+    if "上" in cmd:
+        arm.lift(180.0)
+    if "下" in cmd:
+        arm.lift(0.0)
+    if "左" in cmd:
+        arm.rotate(180.0)
+    if "右" in cmd:
+        arm.rotate(0.0)
+    if "前" in cmd:
+        arm.backforward(180.0)
+    if "后" in cmd:
+        arm.backforward(0.0)
+    if "停" in cmd:
+        arm.stop()
+
 def main():
     print("voice control")
+    fs=feishu()
+
     AUDIO_OUTPUT="output.wav"
     while(True):
-        audio_record(AUDIO_OUTPUT, 5) # 录制语音指令
-        result =  speech_recognition(AUDIO_OUTPUT, 'zh-CN') # 识别语音指令
+        audio_record(AUDIO_OUTPUT, 3) # 录制语音指令
+        result =  fs.speech_to_text(AUDIO_OUTPUT) # 识别语音指令
         if len(result) > 0:
             print(result)
-            time.sleep(1) # 延时1秒
-
+            process(result)
 
 if __name__ == '__main__':
     main()

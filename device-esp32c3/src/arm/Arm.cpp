@@ -43,7 +43,13 @@ float Arm::getBackforwardAngle(){
 float Arm::getRotateAngle(){
     return rotate_joint->getAngle();
 }
-
+bool Arm::stopAll(){
+    grab_joint->stop();
+    lift_joint->stop();
+    backforward_joint->stop();
+    rotate_joint->stop();
+    return true;
+}
 
 void Arm::initialization(float angle_grab,float angle_lift,float angle_rotate,float angle_backforward){
     grab_joint->actToAngle(angle_grab,true);

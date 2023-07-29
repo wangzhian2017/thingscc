@@ -102,3 +102,8 @@ int   ServoJoint::getDirection(){
     }
     
 }
+
+int   ServoJoint::stop(){
+    this->expect_angle=this->angle;
+    return  this->angle;
+}

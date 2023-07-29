@@ -29,6 +29,7 @@ public:
     float execute();
     float getAngle();
     int   getDirection();
+    int   stop();
 };
 
 

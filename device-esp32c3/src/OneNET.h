@@ -35,6 +35,9 @@
 //前倾
 #define ONENET_TOPIC_SERVICE_BACKFORWARD "$sys/%s/%s/thing/service/backforward/invoke"
 #define ONENET_TOPIC_SERVICE_BACKFORWARD_RE "$sys/%s/%s/thing/service/backforward/invoke_reply"
+//全部停止转动
+#define ONENET_TOPIC_SERVICE_STOP "$sys/%s/%s/thing/service/stop/invoke"
+#define ONENET_TOPIC_SERVICE_STOP_RE "$sys/%s/%s/thing/service/stop/invoke_reply"
 
 
 //这是post上传数据使用的模板

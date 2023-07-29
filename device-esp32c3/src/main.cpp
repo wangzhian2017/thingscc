@@ -122,7 +122,7 @@ void loop() {
     }
 
     arm.act();
-    delay(20);
+    delay(50);
     oneNET->loop(); //客户端循环检测
 }
 
