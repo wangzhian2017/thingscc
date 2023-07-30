@@ -1,11 +1,14 @@
 #include <Arduino.h>
 #include <ESP32Servo.h>
 #include <Stepper.h>
+#include <ShiftRegister74HC595.h>
 
 Servo myservo;
 
 const int stepsPerRevolution = 100; 
 Stepper myStepper(stepsPerRevolution, 5,8,4,9);
+
+ShiftRegister74HC595<1> sr(0, 1, 2);
 
 void setup() {
   Serial.begin(115200);
@@ -44,6 +47,11 @@ void loop() {
   myStepper.step(2048);
   delay(1000);
   myStepper.step(-2048);
+  delay(1000);
+
+  // set all pins at once
+  uint8_t pinValues[] = { B10101010 }; 
+  sr.setAll(pinValues); 
   delay(1000);
 }
 
