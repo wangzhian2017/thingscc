@@ -122,8 +122,15 @@ def main():
         if not ret:
             break
         frame = cv2.flip(frame, flipCode=1) 
-        attach_result=hd.attach(frame)
+        attach_result=hd.attach(frame,draw=False)
         if attach_result:
+            point = hd.point(5) 
+            cv2.circle(frame, point, 3, (0, 255, 0), cv2.FILLED)
+            point = hd.point(4) 
+            cv2.circle(frame, point, 2, (0, 0, 255), cv2.FILLED)
+            point = hd.point(8) 
+            cv2.circle(frame, point, 2, (0, 0, 255), cv2.FILLED)
+
             if not ready and hd.is_ok():
                 hand_center=hd.point(0) #掌心位置
                 hand_width=hd.distance(5,17) #手掌四指宽度
@@ -135,6 +142,11 @@ def main():
                 process(hd,frame.shape,hand_center,hand_width,pinch)
         else:
             ready=False
+        
+        h, w, c =frame.shape
+        cv2.line(frame,(0,int(h/2)),(w,int(h/2)),(200,200,200),1)
+        cv2.line(frame,(int(w/2),0),(int(w/2),h),(200,200,200),1)
+        
         
         cv2.imshow("sensor", frame)       #CV2窗体
         if cv2.waitKey(1)>0 :  #关闭窗体

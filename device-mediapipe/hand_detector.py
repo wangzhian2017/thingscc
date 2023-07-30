@@ -29,7 +29,6 @@ class handdetector:
         self.tipIds = [4, 8, 12, 16, 20]#对应手指的指尖
         self.attach_img=[]
         self.key_points = []
-        self.direction=[] #5个手指是否伸直, 1:伸直 0:弯曲
 
     def attach(self, img,handNo=0, draw=True):
         """
@@ -39,7 +38,6 @@ class handdetector:
         """
         self.attach_img=img
         self.key_points = []
-        self.direction=[] 
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # 转换颜色空间
         results = self.hands.process(imgRGB)  # 手势识别
         if results.multi_hand_landmarks:
@@ -75,42 +73,72 @@ class handdetector:
         return xmin, ymin,xmax,ymax,xmax-xmin,ymax-ymin
     
 
-    def dinstance(self,p1,p2):
-        return (p1[0]-p2[0])**2+(p1[1]-p2[1])**2
+    def hamming_distance(self,p1,p2):
+        if len(self.key_points)<=0:
+            return -1
+        d=abs(self.key_points[p1][0]-self.key_points[p2][0])+abs(self.key_points[p1][1]-self.key_points[p2][1])
+        return d
     
     #判断5个手指是否伸直, 1:伸直 0:弯曲
     def analy_direction(self):
-        if len(self.direction)<=0:
-            if len(self.key_points)>0:
-                # 通过判断手指尖与手指根部(0点)到位置点的距离判断手指是否伸开(拇指检测到17点的距离)
-                d1=self.dinstance(self.key_points[self.tipIds[0]],self.key_points[17])
-                d2=self.dinstance(self.key_points[self.tipIds[0]-1],self.key_points[17])
-                if(d1<d2):
-                    self.direction.append(0)
-                else:
-                    d1=self.dinstance(self.key_points[self.tipIds[0]],self.key_points[5])
-                    d2=self.dinstance(self.key_points[self.tipIds[0]-1],self.key_points[5])
-                    if(d1<d2):
-                        self.direction.append(0)
-                    else:
-                        self.direction.append(1)
-                # 4 Fingers
-                for i in range(1, 5):
-                    d1=self.dinstance(self.key_points[self.tipIds[i]],self.key_points[0])
-                    d2=self.dinstance(self.key_points[self.tipIds[i]-1],self.key_points[0])
-                    if(d1>d2):
-                        self.direction.append(1)
-                    else:
-                        self.direction.append(0)
-        return self.direction
+        direction=[] 
+        for i in range(0, 5):
+            if self.is_finger_open(i):
+                direction.append(1)
+            else:
+                direction.append(0)
+            
+        return direction
     
+    def is_finger_open(self,index):
+        '''
+        index: 0拇指 1食指 2中指 3无名指 4小指
+        '''
+        if len(self.key_points)<=0:
+            return False
+        
+        # 通过判断手指尖与手指根部(0点)到位置点的距离判断手指是否伸开(拇指检测到17点的距离)
+        if index==0:
+            d1=self.hamming_distance(self.tipIds[0],17)
+            d2=self.hamming_distance(self.tipIds[0]-1,17)
+            if(d1<d2):
+                return False
+            else:
+                d1=self.hamming_distance(self.tipIds[0],5)
+                d2=self.hamming_distance(self.tipIds[0]-1,5)
+                if(d1<d2):
+                    return False
+                else:
+                    return True
+        elif index==1 or index==2 or index==3 or index==4:
+            d1=self.hamming_distance(self.tipIds[index],0)
+            d2=self.hamming_distance(self.tipIds[index]-1,0)
+            if(d1>d2):
+                return True
+            else:
+                return False
+            
+        return False
+
+        
+
     #是否OK手势
     def is_ok(self):
-        direction=self.analy_direction()
-        if(direction==[0, 0, 1, 1, 1]):
-            return True
-        else:
-            return False
+        open2=self.is_finger_open(2)
+        open3=self.is_finger_open(3)
+        open4=self.is_finger_open(4)
+        if open2==1 and open3==1 and open4==1:
+            open0=self.is_finger_open(0)
+            open1=self.is_finger_open(1)
+            if open0==0 and open1==0:
+                return True
+            elif open1==0:
+                d1=self.hamming_distance(6,8)
+                d2=self.hamming_distance(4,8)
+                if(d1>d2):
+                    return True;
+
+        return False
         
     # 判别左右手，需要做一个OK手势进行判断  
     def is_right_or_left(self):
@@ -136,9 +164,12 @@ class handdetector:
             else:
                 return "back" #手背朝前
     
-    def distance(self,index1,index2):
-        d=self.dinstance(self.key_points[index1],self.key_points[index2])
-        d=math.sqrt(d)
+    def distance(self,p1,p2):
+        if len(self.key_points)<=0:
+            return -1
+        d_x=self.key_points[p1][0]-self.key_points[p2][0]
+        d_y=self.key_points[p1][0]-self.key_points[p2][0]
+        d=math.hypot(d_x,d_y)
         return d
     
     def point(self,index):
