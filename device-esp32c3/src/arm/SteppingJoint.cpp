@@ -3,70 +3,15 @@
 
 SteppingJoint::SteppingJoint(int pin1,int pin2,int pin3,int pin4)
 {
-    this->pin1=pin1;
-    this->pin2=pin2;
-    this->pin3=pin3;
-    this->pin4=pin4;
-
-    pinMode(pin1, OUTPUT);
-    pinMode(pin2, OUTPUT);
-    pinMode(pin3, OUTPUT);
-    pinMode(pin4, OUTPUT);
+    m_Stepper=new Stepper(stepsPerRevolution,pin1,pin3,pin2,pin4);
+    m_Stepper->setSpeed(whatSpeed);
 }
 
 SteppingJoint::~SteppingJoint()
 {
 }
 
-void SteppingJoint::setPin(int in1, int in2, int in3, int in4){
-    digitalWrite(pin1, in1);
-    digitalWrite(pin2, in2);
-    digitalWrite(pin3, in3);
-    digitalWrite(pin4, in4); 
-}
 
-
-void SteppingJoint::stepForward(){
-    //8拍模式
-    float delay_time=60000/speed/total_step/8;
-    setPin(1,0,0,0);
-    delay(delay_time); // 延时ms，控制旋转速度
-    setPin(1,1,0,0); 
-    delay(delay_time); // 延时ms，控制旋转速度
-    setPin(0,1,0,0); 
-    delay(delay_time); // 延时ms，控制旋转速度
-    setPin(0,1,1,0); 
-    delay(delay_time); // 延时ms，控制旋转速度
-    setPin(0,0,1,0); 
-    delay(delay_time); // 延时ms，控制旋转速度
-    setPin(0,0,1,1); 
-    delay(delay_time); // 延时ms，控制旋转速度
-    setPin(0,0,0,1); 
-    delay(delay_time); // 延时ms，控制旋转速度
-    setPin(1,0,0,1); 
-    delay(delay_time); // 延时ms，控制旋转速度
-}
-void SteppingJoint::stepReverse(){
-    //8拍模式
-    float delay_time=60000/speed/total_step/8;
-    setPin(1,0,0,0);
-    delay(delay_time); // 延时ms，控制旋转速度
-    setPin(1,0,0,1); 
-    delay(delay_time); // 延时ms，控制旋转速度
-    setPin(0,0,0,1); 
-    delay(delay_time); // 延时ms，控制旋转速度
-    setPin(0,0,1,1); 
-    delay(delay_time); // 延时ms，控制旋转速度
-    setPin(0,0,1,0); 
-    delay(delay_time); // 延时ms，控制旋转速度
-    setPin(0,1,1,0); 
-    delay(delay_time); // 延时ms，控制旋转速度
-    setPin(0,1,0,0); 
-    delay(delay_time); // 延时ms，控制旋转速度
-
-    setPin(1,1,0,0); 
-    delay(delay_time); // 延时ms，控制旋转速度
-}
 
 float SteppingJoint::actToAngle(float angle,bool immediately){
     expect_angle=angle;
@@ -77,6 +22,28 @@ float SteppingJoint::actToAngle(float angle,bool immediately){
 }
 
 float SteppingJoint::execute(){
+    if(this->expect_angle!=this->angle){
+        int diff=this->expect_angle-this->angle;
+        if(diff > 0-this->inc_angle && diff < this->inc_angle)
+        {
+            m_Stepper->step(this->expect_angle-this->angle);
+            this->angle=this->expect_angle;
+        }
+        else if(diff>0){
+            this->angle+=this->inc_angle;
+            m_Stepper->step(calStep(this->inc_angle));
+        }else {
+            this->angle-=this->inc_angle;
+            m_Stepper->step(-calStep(this->inc_angle));
+        }
+        
+        if(this->angle<-360){
+            this->angle +=360;
+        }else if (this->angle>360)
+        {
+            this->angle-=360;
+        }
+    }
     return angle;
 }
 float SteppingJoint::getAngle(){
@@ -100,4 +67,11 @@ int   SteppingJoint::getDirection(){
 int   SteppingJoint::stop(){
     expect_angle=angle;
     return angle;
+}
+
+float SteppingJoint::calStep(float degree){
+    //8拍情况下，还有1/64减速箱，所以转一圈（360）需要64 * 64 = 4096步
+    //4拍情况下， 还有1/64减速箱，转一圈（360）需要64 * 32 = 2048步
+    float step=degree*stepsPerRevolution*whatSpeed/360;
+    return step;
 }
