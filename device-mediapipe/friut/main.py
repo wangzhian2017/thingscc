@@ -285,44 +285,45 @@ class Manager(object):
                 return
             record_time += 1
 
-    def main(self):
-        """ 主页 """
-        self.bgm.play_menu()
-        while True:
-            # 设置游戏帧率
-            self.clock.tick(60)
-            self.background_list.update()
-            self.circle_option.update()
-            self.option_fruit_list.update()
-            self.fruit_half_list.update()
 
-            temp_flag = self.impact_check()
-            pygame.display.update()
-            if temp_flag == 1:
-                self.classic_mode()
-                self.__init__()
-                self.bgm.play_over()
-                self.bgm.play_menu()
+def main():
+    """ 主页 """
+    manager = Manager()
+    manager.bgm.play_menu()
+    while True:
+        # 设置游戏帧率
+        manager.clock.tick(60)
+        manager.background_list.update()
+        manager.circle_option.update()
+        manager.option_fruit_list.update()
+        manager.fruit_half_list.update()
 
-            if temp_flag == 2:
-                self.zen_mode()
-                self.__init__()
-                self.bgm.play_over()
-                self.bgm.play_menu()
+        temp_flag = manager.impact_check()
+        pygame.display.update()
+        if temp_flag == 1:
+            manager.classic_mode()
+            manager.__init__()
+            manager.bgm.play_over()
+            manager.bgm.play_menu()
 
-            elif temp_flag == 0:
-                pygame.quit()
-                exit()
-            elif temp_flag == 3:
-                self.__init__()
-                self.bgm.play_over()
-                self.bgm.play_menu()
-            self.check_key()
+        if temp_flag == 2:
+            manager.zen_mode()
+            manager.__init__()
+            manager.bgm.play_over()
+            manager.bgm.play_menu()
+
+        elif temp_flag == 0:
+            pygame.quit()
+            exit()
+        elif temp_flag == 3:
+            manager.__init__()
+            manager.bgm.play_over()
+            manager.bgm.play_menu()
+        manager.check_key()
 
 
 if __name__ == '__main__':
     #https://blog.51cto.com/u_16099272/6303062
     
     print("切水果开始")
-    manager = Manager()
-    manager.main()
+    main()
