@@ -1,10 +1,11 @@
 import pygame,sys, os
 import random
 
+
 fruits={}
 
 def generate_fruit(fruit):
-    path = os.path.join(os.getcwd(), fruit+'.png')
+    path = os.path.join(os.getcwd(),'images', fruit+'.png')
     fruits[fruit] = {
         'img' : pygame.image.load(path),
         'x' : random.randint(100, 500),
@@ -49,7 +50,7 @@ def main():
                     generate_fruit(k)
                 current_position = pygame.mouse.get_pos()
                 if not v['hit'] and current_position[0] > v['x'] and current_position[0] < v['x']+60 and current_position[1] > v['y'] and current_position[1] < v['y']+60:
-                    path = os.path.join(os.getcwd(),'half_'+k+'.png')
+                    path = os.path.join(os.getcwd(),'images','half_'+k+'.png')
                     v['img'] = pygame.image.load(path)
                     v['speed_x'] += 10
                     score += 1
