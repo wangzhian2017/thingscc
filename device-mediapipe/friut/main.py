@@ -1,12 +1,15 @@
 import pygame
 import random
+import cv2
 from pygame.constants import *
+from PoseHelper import PoseHelper 
 from Background import Background
 from OptionMode import OptionMode
 from Bgm import Bgm
 from Knife import Knife
 from ThrowFruit import ThrowFruit
 from HalfFruit import HalfFruit
+
 
 pygame.init()
 class Manager(object):
@@ -24,12 +27,9 @@ class Manager(object):
     # 经典模式miss掉的水果数
     classic_miss = 0
 
-    def __init__(self):
+    def __init__(self,window):
         # 生成游戏窗口
-        self.window = pygame.display.set_mode((Manager.WIDTH, Manager.HEIGHT))
-        self.window_icon = pygame.image.load("./images/score.png")
-        pygame.display.set_icon(self.window_icon)
-        pygame.display.set_caption("FruitNinja")
+        self.window = window
 
         # 游戏分数
         self.classic_score = 0
@@ -98,7 +98,7 @@ class Manager(object):
             boom_prob = random.randint(0, 10)
             if boom_prob == 8:
                 self.bgm.play_throw()
-                boom = ThrowFruit(self.self.window, "./images/boom.png", None, 5, 5)
+                boom = ThrowFruit(self,self.window, "./images/boom.png", None, 5, 5)
                 self.throw_fruit_list.add(boom)
 
         fruit_image_path = ["./images/sandia.png", "./images/peach.png",
@@ -164,11 +164,11 @@ class Manager(object):
             self.fruit_half_list.add(fruit_left)
             self.fruit_half_list.add(fruit_right)
 
-    def impact_check(self):
+    def impact_check(self,mouse_pos):
         """ 碰撞检测 """
         for item in self.option_fruit_list:
             """ 主页的模式选择 """
-            mouse_pos = pygame.mouse.get_pos()
+            # mouse_pos = pygame.mouse.get_pos()
             if mouse_pos[0] > item.rect.left and mouse_pos[0] < item.rect.right \
                     and mouse_pos[1] > item.rect.top and mouse_pos[1] < item.rect.bottom:
                 self.bgm.play_splatter()
@@ -185,7 +185,7 @@ class Manager(object):
 
         for item in self.throw_fruit_list:
             """ 游戏开始后判断水果是否被切到 """
-            mouse_pos = pygame.mouse.get_pos()
+            # mouse_pos = pygame.mouse.get_pos()
             if mouse_pos[0] > item.rect.left and mouse_pos[0] < item.rect.right \
                     and mouse_pos[1] > item.rect.top and mouse_pos[1] < item.rect.bottom:
                 if item.flag == 0:
@@ -221,7 +221,7 @@ class Manager(object):
             elif event.type == Manager.THROWFRUITTIME and self.mode_flag == 2:
                 self.create_fruit()
 
-    def classic_mode(self):
+    def classic_mode(self,cap,poseHelper):
         """ 经典模式 """
         pygame.font.init()
         self.bgm.play_classic()
@@ -236,7 +236,19 @@ class Manager(object):
         x_times.add(xx)
         x_times.add(x)
 
-        while True:
+        while cap.isOpened():
+            success, image = cap.read()
+            if not success:
+                print("摄像头读取出错.")
+                # If loading a video, use 'break' instead of 'continue'.
+                continue
+            mouse_pos=pygame.mouse.get_pos()
+            image = cv2.flip(image, flipCode=1) 
+            attach_result=poseHelper.attach(image,draw=True)
+            if attach_result:
+                mouse_pos=poseHelper.point(19)
+            pygame.draw.circle(self.window, (255, 255, 255), mouse_pos, 1)
+
             # 设置游戏帧率
             self.clock.tick(60)
             pygame.display.update()
@@ -247,7 +259,7 @@ class Manager(object):
             self.window.blit(text_score, (50, 10))
             x_times.update()
             miss_times.update()
-            temp_flag = self.impact_check()
+            temp_flag = self.impact_check(mouse_pos)
             if temp_flag == 3:
                 return
             self.throw_fruit_list.update()
@@ -265,18 +277,30 @@ class Manager(object):
                 Manager.classic_miss = 0
                 return
 
-    def zen_mode(self):
+    def zen_mode(self,cap,poseHelper):
         """ 禅宗模式 """
         self.bgm.play_classic()
 
         # 记录分数
         record_time = 0
-        while True:
+        while cap.isOpened():
+            success, image = cap.read()
+            if not success:
+                print("摄像头读取出错.")
+                # If loading a video, use 'break' instead of 'continue'.
+                continue
+            mouse_pos=pygame.mouse.get_pos()
+            image = cv2.flip(image, flipCode=1) 
+            attach_result=poseHelper.attach(image,draw=True)
+            if attach_result:
+                mouse_pos=poseHelper.point(19)
+            pygame.draw.circle(self.window, (255, 255, 255), mouse_pos, 10)
+
             # 设置游戏帧率
             self.clock.tick(60)
             self.check_key()
             self.background_list.sprites()[0].update()
-            self.impact_check()
+            self.impact_check(mouse_pos)
             self.throw_fruit_list.update()
             self.fruit_half_list.update()
             pygame.display.update()
@@ -287,10 +311,24 @@ class Manager(object):
 
 
 def main():
-    """ 主页 """
-    manager = Manager()
+    # 生成游戏窗口
+    window = pygame.display.set_mode((Manager.WIDTH, Manager.HEIGHT))
+    window_icon = pygame.image.load("./images/score.png")
+    pygame.display.set_icon(window_icon)
+    pygame.display.set_caption("Fruit")
+
+    manager = Manager(window)
     manager.bgm.play_menu()
-    while True:
+
+    poseHelper=PoseHelper()
+    cap = cv2.VideoCapture(1)
+    while cap.isOpened():
+        success, image = cap.read()
+        if not success:
+            print("摄像头读取出错.")
+            # If loading a video, use 'break' instead of 'continue'.
+            continue
+
         # 设置游戏帧率
         manager.clock.tick(60)
         manager.background_list.update()
@@ -298,17 +336,25 @@ def main():
         manager.option_fruit_list.update()
         manager.fruit_half_list.update()
 
-        temp_flag = manager.impact_check()
+        mouse_pos=pygame.mouse.get_pos()
+        image = cv2.flip(image, flipCode=1) 
+        attach_result=poseHelper.attach(image,draw=True)
+        if attach_result:
+            mouse_pos=poseHelper.point(19)
+        pygame.draw.circle(window, (255, 255, 255), mouse_pos, 5)
+        # print(mouse_pos)
+        
+        temp_flag = manager.impact_check(mouse_pos)
         pygame.display.update()
         if temp_flag == 1:
-            manager.classic_mode()
-            manager.__init__()
+            manager.classic_mode(cap,poseHelper)
+            manager.__init__(window)
             manager.bgm.play_over()
             manager.bgm.play_menu()
 
         if temp_flag == 2:
-            manager.zen_mode()
-            manager.__init__()
+            manager.zen_mode(cap,poseHelper)
+            manager.__init__(window)
             manager.bgm.play_over()
             manager.bgm.play_menu()
 
@@ -316,10 +362,17 @@ def main():
             pygame.quit()
             exit()
         elif temp_flag == 3:
-            manager.__init__()
+            manager.__init__(window)
             manager.bgm.play_over()
             manager.bgm.play_menu()
         manager.check_key()
+
+       
+        # cv2.imshow("Pose", image)       #CV2窗体
+        # if cv2.waitKey(1)>0 :  #关闭窗体
+        #     break
+
+    cap.release()
 
 
 if __name__ == '__main__':
