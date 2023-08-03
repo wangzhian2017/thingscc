@@ -244,7 +244,7 @@ class Manager(object):
                 continue
             mouse_pos=pygame.mouse.get_pos()
             image = cv2.flip(image, flipCode=1) 
-            attach_result=poseHelper.attach(image,draw=True)
+            attach_result=poseHelper.attach(image)
             if attach_result:
                 mouse_pos=poseHelper.point(19)
             pygame.draw.circle(self.window, (255, 255, 255), mouse_pos, 1)
@@ -291,7 +291,7 @@ class Manager(object):
                 continue
             mouse_pos=pygame.mouse.get_pos()
             image = cv2.flip(image, flipCode=1) 
-            attach_result=poseHelper.attach(image,draw=True)
+            attach_result=poseHelper.attach(image)
             if attach_result:
                 mouse_pos=poseHelper.point(19)
             pygame.draw.circle(self.window, (255, 255, 255), mouse_pos, 10)
@@ -338,7 +338,7 @@ def main():
 
         mouse_pos=pygame.mouse.get_pos()
         image = cv2.flip(image, flipCode=1) 
-        attach_result=poseHelper.attach(image,draw=True)
+        attach_result=poseHelper.attach(image)
         if attach_result:
             mouse_pos=poseHelper.point(19)
         pygame.draw.circle(window, (255, 255, 255), mouse_pos, 5)
