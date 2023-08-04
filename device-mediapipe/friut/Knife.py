@@ -1,21 +1,13 @@
 import pygame
 
-class Knife(object):
+class knife(pygame.sprite.Sprite):
     def __init__(self, window):
         self.window = window
-        self.apple_flash = pygame.image.load("./images/apple_flash.png")
-        self.banana_flash = pygame.image.load("./images/banana_flash.png")
-        self.peach_flash = pygame.image.load("./images/peach_flash.png")
-        self.sandia_flash = pygame.image.load("./images/sandia_flash.png")
+        self.image = pygame.image.load("./friut/images/flash.png")
+        self.rect  =self.image.get_rect()
 
-    def show_apple_flash(self, x, y):
-        self.window.blit(self.apple_flash, (x, y))
-
-    def show_banana_flash(self, x, y):
-        self.window.blit(self.banana_flash, (x, y))
-
-    def show_peach_flash(self, x, y):
-        self.window.blit(self.peach_flash, (x, y))
-
-    def show_sandia_flash(self, x, y):
-        self.window.blit(self.sandia_flash, (x, y))
+    def update(self, center_x, center_y,angel):
+        center=(center_x,center_y)
+        new_image = pygame.transform.rotate(self.image, -angel)
+        self.window.blit(new_image, new_image.get_rect(center=center))
+        
