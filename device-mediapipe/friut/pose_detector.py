@@ -21,9 +21,9 @@ class posedetector():
         results = self.pose.process(image)
         if results.pose_landmarks:
             for id, lm in enumerate(results.pose_landmarks.landmark):
-                h, w, c = image.shape
-                px, py,pz = int(lm.x * w), int(lm.y * h),lm.z
-                self.key_points.append([px, py,pz])
+                # h, w, c = image.shape
+                # px, py,pz = int(lm.x * w), int(lm.y * h),lm.z
+                self.key_points.append([lm.x, lm.y,lm.z])
         # Draw the pose annotation on the image.
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -37,6 +37,9 @@ class posedetector():
             
         return (len(self.key_points)>0)
     
-    def point(self,index):
-        return (self.key_points[index][0],self.key_points[index][1])
+    def point(self,index,layout=(0,0)):
+        if layout==(0,0):
+            h, w, c = self.attach_img.shape
+            layout=(w,h)
+        return (self.key_points[index][0]*layout[0],self.key_points[index][1]*layout[1])
 
