@@ -25,3 +25,7 @@ class bgm(object):
     def play_over(self):
         pygame.mixer.music.load("./friut/sound/over.mp3")
         pygame.mixer.music.play(1, 0)
+
+    def play_boom(self):
+        pygame.mixer.music.load("./friut/sound/boom.mp3")
+        pygame.mixer.music.play(1, 0)

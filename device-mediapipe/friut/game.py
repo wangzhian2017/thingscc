@@ -8,6 +8,8 @@ from friut.knife import knife
 from friut.option import option
 from friut.throw import throw
 from friut.half import half
+from friut.bomb import bomb
+from friut.catalog import catalog
 
 
 class game:
@@ -74,13 +76,11 @@ class game:
         option1_fruit = option(self.screen, 
                                     self.width - 405 + option1_circle.rect.width / 2 - 49,
                                     self.height - 250 + option1_circle.rect.height / 2 - 85 / 2,
-                                    "./friut/images/sandia.png", -3, 0)
+                                    catalog.image_path[catalog.sandia], -3, catalog.sandia)
         self.option_list.add(option1_fruit)
 
     def create_fruit(self):
-        fruit_image_path = ["./friut/images/sandia.png", "./friut/images/peach.png",
-                            "./friut/images/banana.png", "./friut/images/apple.png",
-                            "./friut/images/basaha.png","./friut/images/boom.png"]
+        fruit_image_path = catalog.image_path
         fruit_number = random.randint(1, 3)
         for n in range(fruit_number):
             rand_fruit_index = random.randint(0, len(fruit_image_path) - 1)
@@ -94,38 +94,40 @@ class game:
         fruit_y=fruit.rect.y
         angel_velocity=fruit.angel_velocity
         v_angel=fruit.cur_angel
-        if fruit.flag == 0:
+        if fruit.flag == catalog.sandia:
             """ 西瓜被切开 """
             fruit_left = half(self, "./friut/images/sandia-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
             fruit_right = half(self, "./friut/images/sandia-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
             self.half_fruit_list.add(fruit_left)
             self.half_fruit_list.add(fruit_right)
-        if fruit.flag == 1:
+        if fruit.flag == catalog.peach:
             """ 梨被切开 """
             fruit_left = half(self, "./friut/images/peach-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
             fruit_right = half(self, "./friut/images/peach-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
             self.half_fruit_list.add(fruit_left)
             self.half_fruit_list.add(fruit_right)
-        if fruit.flag == 2:
+        if fruit.flag == catalog.banana:
             """ 香蕉被切开 """
             fruit_left = half(self, "./friut/images/banana-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
             fruit_right = half(self, "./friut/images/banana-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
             self.half_fruit_list.add(fruit_left)
             self.half_fruit_list.add(fruit_right)
-        if fruit.flag == 3:
+        if fruit.flag == catalog.apple:
             """ 苹果被切开 """
             fruit_left = half(self, "./friut/images/apple-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
             fruit_right = half(self, "./friut/images/apple-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
             self.half_fruit_list.add(fruit_left)
             self.half_fruit_list.add(fruit_right)
-        if fruit.flag == 4:
+        if fruit.flag == catalog.basaha:
             """ 草莓被切开 """
             fruit_left = half(self, "./friut/images/basaha-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
             fruit_right = half(self, "./friut/images/basaha-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
             self.half_fruit_list.add(fruit_left)
             self.half_fruit_list.add(fruit_right)
-        if fruit.flag==5:
+        if fruit.flag==catalog.boom:
             """ 炸弹被切开 """
+            bomb_=bomb(self,fruit_x,fruit_y,v_angel)
+            self.half_fruit_list.add(bomb_)
             pass
 
     def undercut(self,start_pos,end_pos):
@@ -150,6 +152,7 @@ class game:
                 self.create_fruit_half(item)
                 self.option_list.remove_internal(item)
                 self.started=True
+            self.bgm_.play_classic()
 
 
         if pygame.sprite.spritecollideany(self.knife_,self.throw_fruit_list,pygame.sprite.collide_mask):
@@ -159,6 +162,7 @@ class game:
                 self.create_fruit_half(item)
                 self.throw_fruit_list.remove_internal(item)
                 if item.flag==5: # 切到炸弹
+                    self.bgm_.play_boom()
                     self.started=False
                 
 
