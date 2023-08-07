@@ -161,7 +161,7 @@ class game:
             for item in collide_list:
                 self.create_fruit_half(item)
                 self.throw_fruit_list.remove_internal(item)
-                if item.flag==5: # 切到炸弹
+                if item.flag==catalog.boom: # 切到炸弹
                     self.bgm_.play_boom()
                     self.started=False
                 
