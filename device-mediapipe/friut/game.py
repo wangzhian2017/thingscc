@@ -137,33 +137,35 @@ class game:
         if(distance<200):
             return
         
-        print("undercut")
+       
         x=(end_pos[0]+start_pos[0])/2
         y=(end_pos[1]+start_pos[1])/2
         angle=math.atan2(dy,dx)
-        angle=int(angle*180/math.pi)
+        angle=180-int(angle*180/math.pi)
+        print(start_pos,end_pos,angle)
         self.knife_.show_flash(x,y,angle)
         # pygame.draw.line(self.screen, (0, 255, 0), start_pos, end_pos,3)
         # pygame.draw.circle(self.screen, (255, 0, 0), (x,y),5)
-        if pygame.sprite.spritecollideany(self.knife_,self.option_list,pygame.sprite.collide_mask):
-            self.bgm_.play_splatter()
-            collide_list=pygame.sprite.spritecollide(self.knife_,self.option_list,False,pygame.sprite.collide_mask)
-            for item in collide_list:
-                self.create_fruit_half(item)
-                self.option_list.remove_internal(item)
-                self.started=True
-            self.bgm_.play_classic()
+        if not self.started:
+            if pygame.sprite.spritecollideany(self.knife_,self.option_list,pygame.sprite.collide_mask):
+                self.bgm_.play_splatter()
+                collide_list=pygame.sprite.spritecollide(self.knife_,self.option_list,False,pygame.sprite.collide_mask)
+                for item in collide_list:
+                    self.create_fruit_half(item)
+                    self.option_list.remove_internal(item)
+                    self.started=True
+                self.bgm_.play_classic()
 
-
-        if pygame.sprite.spritecollideany(self.knife_,self.throw_fruit_list,pygame.sprite.collide_mask):
-            self.bgm_.play_splatter()
-            collide_list=pygame.sprite.spritecollide(self.knife_,self.throw_fruit_list,False,pygame.sprite.collide_mask)
-            for item in collide_list:
-                self.create_fruit_half(item)
-                self.throw_fruit_list.remove_internal(item)
-                if item.flag==catalog.boom: # 切到炸弹
-                    self.bgm_.play_boom()
-                    self.started=False
+        if self.started:
+            if pygame.sprite.spritecollideany(self.knife_,self.throw_fruit_list,pygame.sprite.collide_mask):
+                self.bgm_.play_splatter()
+                collide_list=pygame.sprite.spritecollide(self.knife_,self.throw_fruit_list,False,pygame.sprite.collide_mask)
+                for item in collide_list:
+                    self.create_fruit_half(item)
+                    self.throw_fruit_list.remove_internal(item)
+                    if item.flag==catalog.boom: # 切到炸弹
+                        self.bgm_.play_boom()
+                        self.started=False
                 
 
             

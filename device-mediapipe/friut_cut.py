@@ -33,6 +33,7 @@ def main():
         attach_result=pd.attach(image)
         if attach_result:
             pos=pd.point(19,(g.width,g.height))
+            pygame.draw.circle(g.screen, (255, 255, 255), pos,5)
             if start_pos=="":
                 start_pos=pos
                 end_pos=""

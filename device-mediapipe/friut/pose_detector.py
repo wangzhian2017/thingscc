@@ -39,5 +39,5 @@ class posedetector():
         if layout==(0,0):
             h, w, c = self.attach_image.shape
             layout=(w,h)
-        return (self.key_points[index][0]*layout[0],self.key_points[index][1]*layout[1])
+        return (int(self.key_points[index][0]*layout[0]),int(self.key_points[index][1]*layout[1]))
 

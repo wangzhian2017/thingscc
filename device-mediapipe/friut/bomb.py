@@ -3,6 +3,8 @@ import random
 
 class bomb(pygame.sprite.Sprite):
    def __init__(self, game,  x, y, v_angel):
+      pygame.sprite.Sprite.__init__(self)
+      
       self.g=game
       self.win_width=game.width
       self.win_height=game.height
@@ -19,7 +21,7 @@ class bomb(pygame.sprite.Sprite):
       # 旋转的总角度
       self.cur_angel = v_angel
 
-      self.times=60
+      self.times=30
 
    def update(self):
       pygame.draw.line(self.window, (255, 255, 255), self.rect.center, (0,0),10)
