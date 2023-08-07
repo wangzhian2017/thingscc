@@ -129,10 +129,15 @@ class game:
             pass
 
     def undercut(self,start_pos,end_pos):
-        x=(end_pos[0]+start_pos[0])/2
-        y=(end_pos[1]+start_pos[1])/2
         dy=end_pos[1]-start_pos[1]
         dx=end_pos[0]-start_pos[0]
+        distance=(dx**2+dy**2)**0.5
+        if(distance<200):
+            return
+        
+        print("undercut")
+        x=(end_pos[0]+start_pos[0])/2
+        y=(end_pos[1]+start_pos[1])/2
         angle=math.atan2(dy,dx)
         angle=int(angle*180/math.pi)
         self.knife_.show_flash(x,y,angle)
