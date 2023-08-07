@@ -1,14 +1,8 @@
 import cv2
-
-import time
-import random
 import pygame
 from pygame.constants import *
 from friut.game import game
-from friut.bgm import bgm
 from friut.pose_detector import posedetector
-from friut.background import background
-from friut.knife import knife
 
 
 
