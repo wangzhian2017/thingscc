@@ -49,9 +49,8 @@ class game:
     def update(self):
         self.background_list.update()
         self.knife_.update()
-        if not self.started:
-            self.option_list.update()
-        else:
+        self.option_list.update()
+        if self.started:
             self.throw_fruit_list.update()
             self.half_fruit_list.update()
 
