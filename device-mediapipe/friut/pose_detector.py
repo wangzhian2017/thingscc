@@ -9,13 +9,11 @@ class posedetector():
 
         self.pose= self.mp_pose.Pose( min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
-        self.attach_img=[]
+        self.attach_image=[]
         self.key_points = []
 
     def attach(self, image,draw=False):
-        self.attach_img=image
         self.key_points = []
-
         image.flags.writeable = False
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = self.pose.process(image)
@@ -27,19 +25,19 @@ class posedetector():
         # Draw the pose annotation on the image.
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
         if draw:
             self.mp_drawing.draw_landmarks(
                 image,
                 results.pose_landmarks,
                 self.mp_pose.POSE_CONNECTIONS,
                 landmark_drawing_spec=self.mp_drawing_styles.get_default_pose_landmarks_style())
-            
+        
+        self.attach_image=image
         return (len(self.key_points)>0)
     
     def point(self,index,layout=(0,0)):
         if layout==(0,0):
-            h, w, c = self.attach_img.shape
+            h, w, c = self.attach_image.shape
             layout=(w,h)
         return (self.key_points[index][0]*layout[0],self.key_points[index][1]*layout[1])
 
