@@ -5,7 +5,7 @@ from friut.game import game
 from friut.pose_detector import posedetector
 
 
-
+# pyinstaller -F friut_cut.py
 
 
 
