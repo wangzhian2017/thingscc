@@ -33,25 +33,8 @@ def main():
             continue
 
         g.clock.tick(fps)
-        g.background_list.update()
-        g.knife_.update()
-        g.throw_fruit_list.update()
+        g.update()
 
-        # cTime = time.time()
-        # if (cTime-pTime) > 0.5:
-        #     pTime=cTime
-        #     image = cv2.flip(image, flipCode=1) 
-        #     attach_result=pd.attach(image)
-        #     if attach_result:
-        #         if start_pos=="":
-        #             start_pos=pd.point(19)
-        #         else:
-        #             pos=pd.point(19)
-        #             if pos[1]<start_pos[1]: #为了游戏便于游玩，规定只能从上往下切
-        #                 start_pos=pos
-        #             else:
-        #                 g.undercut(start_pos,pos)
-        #                 start_pos=""
         image = cv2.flip(image, flipCode=1) 
         attach_result=pd.attach(image)
         if attach_result:
@@ -59,12 +42,12 @@ def main():
             if start_pos=="":
                 start_pos=pos
                 end_pos=""
-            elif pos[1]>start_pos[1]:
-                end_pos=pos
-            elif start_pos!="" and end_pos!="":
+            elif start_pos!="" and end_pos!="" and pos[1]<end_pos[1]:
                 g.undercut(start_pos,end_pos)
                 start_pos=""
                 end_pos=""
+            elif pos[1]>start_pos[1]:
+                end_pos=pos
             else:
                 start_pos=""
                 end_pos=""

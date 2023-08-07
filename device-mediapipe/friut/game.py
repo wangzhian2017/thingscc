@@ -5,7 +5,9 @@ from pygame.constants import *
 from friut.bgm import bgm
 from friut.background import background
 from friut.knife import knife
+from friut.option import option
 from friut.throw import throw
+from friut.half import half
 
 
 class game:
@@ -34,8 +36,24 @@ class game:
         self.background_list.add(background(self.screen, 20, 135, "./friut/images/home-desc.png"))
         # 刀
         self.knife_ = knife(self.screen)
+        # 开始菜单
+        self.option_list = pygame.sprite.Group()
         # 完整水果
         self.throw_fruit_list = pygame.sprite.Group()
+        # 切开的水果
+        self.half_fruit_list = pygame.sprite.Group()
+
+        self.started=False
+        self.create_option()
+
+    def update(self):
+        self.background_list.update()
+        self.knife_.update()
+        if not self.started:
+            self.option_list.update()
+        else:
+            self.throw_fruit_list.update()
+            self.half_fruit_list.update()
 
     def check_key(self):
         """ 监听事件 """
@@ -47,7 +65,17 @@ class game:
                 self.width = event.w
                 self.height = event.h
             elif event.type == self.THROWFRUITTIME:
-                self.create_fruit()
+                if self.started:
+                    self.create_fruit()
+
+    def create_option(self):
+        option1_circle = option(self.screen, self.width - 405, self.height - 250, "./friut/images/new-game.png", 3,None)
+        self.option_list.add(option1_circle)
+        option1_fruit = option(self.screen, 
+                                    self.width - 405 + option1_circle.rect.width / 2 - 49,
+                                    self.height - 250 + option1_circle.rect.height / 2 - 85 / 2,
+                                    "./friut/images/sandia.png", -3, 0)
+        self.option_list.add(option1_fruit)
 
     def create_fruit(self):
         fruit_image_path = ["./friut/images/sandia.png", "./friut/images/peach.png",
@@ -61,6 +89,45 @@ class game:
             fruit = throw(self, fruit_image_path[rand_fruit_index], v0, 5, rand_fruit_index)
             self.throw_fruit_list.add(fruit)
 
+    def create_fruit_half(self, fruit):
+        fruit_x=fruit.rect.x
+        fruit_y=fruit.rect.y
+        angel_velocity=fruit.angel_velocity
+        v_angel=fruit.cur_angel
+        if fruit.flag == 0:
+            """ 西瓜被切开 """
+            fruit_left = half(self, "./images/sandia-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
+            fruit_right = half(self, "./images/sandia-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
+            self.half_fruit_list.add(fruit_left)
+            self.half_fruit_list.add(fruit_right)
+        if fruit.flag == 1:
+            """ 梨被切开 """
+            fruit_left = half(self, "./images/peach-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
+            fruit_right = half(self, "./images/peach-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
+            self.half_fruit_list.add(fruit_left)
+            self.half_fruit_list.add(fruit_right)
+        if fruit.flag == 2:
+            """ 香蕉被切开 """
+            fruit_left = half(self, "./images/banana-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
+            fruit_right = half(self, "./images/banana-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
+            self.half_fruit_list.add(fruit_left)
+            self.half_fruit_list.add(fruit_right)
+        if fruit.flag == 3:
+            """ 苹果被切开 """
+            fruit_left = half(self, "./images/apple-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
+            fruit_right = half(self, "./images/apple-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
+            self.half_fruit_list.add(fruit_left)
+            self.half_fruit_list.add(fruit_right)
+        if fruit.flag == 4:
+            """ 草莓被切开 """
+            fruit_left = half(self, "./images/basaha-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
+            fruit_right = half(self, "./images/basaha-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
+            self.half_fruit_list.add(fruit_left)
+            self.half_fruit_list.add(fruit_right)
+        if fruit.flag==5:
+            """ 炸弹被切开 """
+            pass
+
     def undercut(self,start_pos,end_pos):
         x=(end_pos[0]+start_pos[0])/2
         y=(end_pos[1]+start_pos[1])/2
@@ -69,11 +136,22 @@ class game:
         angle=math.atan2(dy,dx)
         angle=int(angle*180/math.pi)
         self.knife_.show_flash(x,y,angle)
+        # pygame.draw.line(self.screen, (0, 255, 0), start_pos, end_pos,3)
+        # pygame.draw.circle(self.screen, (255, 0, 0), (x,y),5)
+        if pygame.sprite.spritecollideany(self.knife_,self.option_list,pygame.sprite.collide_mask):
+            self.bgm_.play_splatter()
+            collide_list=pygame.sprite.spritecollide(self.knife_,self.option_list,False,pygame.sprite.collide_mask)
+            for item in collide_list:
+                self.create_fruit_half(item)
+                self.option_list.remove_internal(item)
+
+
         if pygame.sprite.spritecollideany(self.knife_,self.throw_fruit_list,pygame.sprite.collide_mask):
             self.bgm_.play_splatter()
             collide_list=pygame.sprite.spritecollide(self.knife_,self.throw_fruit_list,False,pygame.sprite.collide_mask)
             for item in collide_list:
-                pass
+                self.create_fruit_half(item)
+                self.throw_fruit_list.remove_internal(item)
+                
 
-            # pygame.draw.line(self.screen, (0, 255, 0), start_pos, end_pos,3)
-            # pygame.draw.circle(self.screen, (255, 0, 0), (x,y),5)
+            
