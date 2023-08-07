@@ -49,10 +49,11 @@ class game:
     def update(self):
         self.background_list.update()
         self.knife_.update()
-        self.option_list.update()
         if self.started:
             self.throw_fruit_list.update()
-            self.half_fruit_list.update()
+        else:
+            self.option_list.update()
+        self.half_fruit_list.update()
 
     def check_key(self):
         """ 监听事件 """
@@ -143,6 +144,7 @@ class game:
             for item in collide_list:
                 self.create_fruit_half(item)
                 self.option_list.remove_internal(item)
+                self.started=True
 
 
         if pygame.sprite.spritecollideany(self.knife_,self.throw_fruit_list,pygame.sprite.collide_mask):
@@ -151,6 +153,8 @@ class game:
             for item in collide_list:
                 self.create_fruit_half(item)
                 self.throw_fruit_list.remove_internal(item)
+                if item.flag==5: # 切到炸弹
+                    self.started=False
                 
 
             
