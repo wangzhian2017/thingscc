@@ -96,32 +96,32 @@ class game:
         v_angel=fruit.cur_angel
         if fruit.flag == 0:
             """ 西瓜被切开 """
-            fruit_left = half(self, "./images/sandia-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
-            fruit_right = half(self, "./images/sandia-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
+            fruit_left = half(self, "./friut/images/sandia-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
+            fruit_right = half(self, "./friut/images/sandia-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
             self.half_fruit_list.add(fruit_left)
             self.half_fruit_list.add(fruit_right)
         if fruit.flag == 1:
             """ 梨被切开 """
-            fruit_left = half(self, "./images/peach-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
-            fruit_right = half(self, "./images/peach-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
+            fruit_left = half(self, "./friut/images/peach-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
+            fruit_right = half(self, "./friut/images/peach-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
             self.half_fruit_list.add(fruit_left)
             self.half_fruit_list.add(fruit_right)
         if fruit.flag == 2:
             """ 香蕉被切开 """
-            fruit_left = half(self, "./images/banana-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
-            fruit_right = half(self, "./images/banana-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
+            fruit_left = half(self, "./friut/images/banana-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
+            fruit_right = half(self, "./friut/images/banana-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
             self.half_fruit_list.add(fruit_left)
             self.half_fruit_list.add(fruit_right)
         if fruit.flag == 3:
             """ 苹果被切开 """
-            fruit_left = half(self, "./images/apple-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
-            fruit_right = half(self, "./images/apple-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
+            fruit_left = half(self, "./friut/images/apple-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
+            fruit_right = half(self, "./friut/images/apple-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
             self.half_fruit_list.add(fruit_left)
             self.half_fruit_list.add(fruit_right)
         if fruit.flag == 4:
             """ 草莓被切开 """
-            fruit_left = half(self, "./images/basaha-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
-            fruit_right = half(self, "./images/basaha-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
+            fruit_left = half(self, "./friut/images/basaha-1.png", fruit_x - 50, fruit_y, angel_velocity, v_angel, -5)
+            fruit_right = half(self, "./friut/images/basaha-2.png", fruit_x + 50, fruit_y, -angel_velocity, v_angel,5)
             self.half_fruit_list.add(fruit_left)
             self.half_fruit_list.add(fruit_right)
         if fruit.flag==5:
