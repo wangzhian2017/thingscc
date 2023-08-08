@@ -34,18 +34,14 @@ def main():
         if attach_result:
             pos=pd.point(19,(g.width,g.height))
             pygame.draw.circle(g.screen, (255, 255, 255), pos,5)
-            if start_pos=="":
+            if start_pos=="" or abs(pos[1]-start_pos[1])<3 or abs(pos[0]-start_pos[0])<3:
                 start_pos=pos
                 end_pos=""
-            elif start_pos!="" and end_pos!="" and pos[1]<end_pos[1]:
-                g.undercut(start_pos,end_pos)
+            elif abs(pos[1]-start_pos[1])>50 or abs(pos[0]-start_pos[0])>50:
+                g.undercut(start_pos,pos)
                 start_pos=""
                 end_pos=""
-            elif pos[1]>start_pos[1]:
-                end_pos=pos
-            else:
-                start_pos=""
-                end_pos=""
+           
                     
            
             
