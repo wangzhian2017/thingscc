@@ -6,7 +6,7 @@
 #include "arm/Arm.h"
 #include "OneNET.h"
 
-const char *ssid = "DI-WANGZHIAN 8695";    //wifi名
+const char *ssid = "DI-WANGZHIAN";    //wifi名
 const char *password = "13580416614";      //wifi密码
 
 #define mqtt_clientid "esp32c3" //设备名称

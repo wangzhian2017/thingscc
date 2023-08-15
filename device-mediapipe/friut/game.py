@@ -81,7 +81,7 @@ class game:
 
     def create_fruit(self):
         fruit_image_path = catalog.image_path
-        fruit_number = random.randint(1, 3)
+        fruit_number = random.randint(1, 10)
         for n in range(fruit_number):
             rand_fruit_index = random.randint(0, len(fruit_image_path) - 1)
             self.bgm_.play_throw()
