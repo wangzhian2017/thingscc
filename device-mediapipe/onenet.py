@@ -3,9 +3,9 @@ import cv2
 import numpy as np
 from queue import Queue
 import threading
-from hand_detector import handdetector
+from arm.hand_detector import handdetector
 import time
-from mechanical_arm import mechanical_arm
+from arm.mechanical_arm import mechanical_arm
 
 base_url="http://localhost:8080"
 product_id="iqDUVzCjyD"

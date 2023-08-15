@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 import cv2
-from hand_detector import handdetector
+from arm.hand_detector import handdetector
 import numpy
 import time
 

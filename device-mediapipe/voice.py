@@ -2,8 +2,8 @@ import pyaudio
 import wave
 import speech_recognition as sr
 import time
-from feishu import feishu
-from mechanical_arm import mechanical_arm
+from arm.feishu import feishu
+from arm.mechanical_arm import mechanical_arm
 
 base_url="http://localhost:8080"
 product_id="iqDUVzCjyD"
