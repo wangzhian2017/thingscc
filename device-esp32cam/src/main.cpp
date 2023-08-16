@@ -123,4 +123,5 @@ void loop() {
 
   snap();
 
+  delay(1000); 
 }

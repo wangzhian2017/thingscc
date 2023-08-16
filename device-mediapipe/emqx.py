@@ -1,16 +1,30 @@
 import paho.mqtt.client as mqtt
 import cv2
 import random
+import re
+import binascii
 
 # 连接成功回调
 def on_connect(client, userdata, flags, rc):
     print('Connected with result code '+str(rc))
-    client.subscribe('testtopic/#')
+    client.subscribe('$sys/+/+/image/post')
 
-# 消息接收回调
+# 消息接收回调  https://www.jianshu.com/p/29b8f179182c
 def on_message(client, userdata, msg):
-    print(userdata)
-    print(msg.topic+" "+str(msg.payload))
+    print("userdata",userdata)
+    print("topic",msg.topic)
+    print("payload",msg.payload)
+    
+    match = True #re.match( r'$sys/(.*)/(.*)/image/post', msg.topic, re.M|re.I)
+    if match:
+        # with open("data/test.png","rb") as f:
+        #     content=f.read()
+        #     print(binascii.hexlify(content))
+        data = binascii.a2b_hex(msg.payload)
+        with open('data/image.jpg', 'ab') as f:
+            f.write(data)
+        img = cv2.imread('data/image.jpg')
+        cv2.imshow("arm_camera", img)
 
 def main():
     client_id = f'python-mqtt-{random.randint(0, 1000)}'  # 客户端id不能重复
@@ -27,9 +41,11 @@ def main():
     # 发布消息
     client.publish('python-mqtt',payload='Hello World',qos=0)
 
-    # client.loop_forever()
+    
+   
+    client.loop_forever()
     # 运行一个线程来自动调用loop()处理网络事件, 非阻塞
-    client.loop_start()
+    # client.loop_start()
 
 
 if __name__ == '__main__':

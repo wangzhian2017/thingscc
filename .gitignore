@@ -4,3 +4,4 @@ device-mediapipe/__pycache__/mechanical_arm.cpython-38.pyc
 device-mediapipe/__pycache__/feishu.cpython-38.pyc
 *.pyc
 *.spec
+device-mediapipe/data/
