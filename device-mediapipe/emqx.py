@@ -5,19 +5,23 @@ import re
 import binascii
 import numpy as np
 
+
 # 连接成功回调
 def on_connect(client, userdata, flags, rc):
     print('Connected with result code '+str(rc))
-    client.subscribe('$sys/+/+/image/post')
+    client.subscribe("$sys/+/+/image/post")
 
 # 消息接收回调  https://www.jianshu.com/p/29b8f179182c
 def on_message(client, userdata, msg):
     print("userdata",userdata)
     print("topic",msg.topic)
-    print("payload",msg.payload)
+    # print("payload",msg.payload)
     
-    match = True #re.match( r'$sys/(.*)/(.*)/image/post', msg.topic, re.M|re.I)
+    pattern=re.compile('sys/(.+)/(.+)/image/post')   #匹配ab与ef之间的内容
+    match=pattern.findall(msg.topic)
     if match:
+        print("productid",match[0][0])
+        print("clientid",match[0][1])
         # with open("data/test.png","rb") as f:
         #     content=f.read()
         #     print(binascii.hexlify(content))
