@@ -3,6 +3,7 @@ import cv2
 import random
 import re
 import binascii
+import numpy as np
 
 # 连接成功回调
 def on_connect(client, userdata, flags, rc):
@@ -20,11 +21,16 @@ def on_message(client, userdata, msg):
         # with open("data/test.png","rb") as f:
         #     content=f.read()
         #     print(binascii.hexlify(content))
-        data = binascii.a2b_hex(msg.payload)
-        with open('data/image.jpg', 'ab') as f:
-            f.write(data)
-        img = cv2.imread('data/image.jpg')
-        cv2.imshow("arm_camera", img)
+
+        # data = binascii.a2b_hex(msg.payload)
+        # with open('data/image.jpg', 'ab') as f:
+        #     f.write(data)
+        # img = cv2.imread('data/image.jpg')
+        # cv2.imshow("arm_camera", img)
+
+        data=np.frombuffer(msg.payload,dtype=np.uint16)
+        img=cv2.imdecode(data,cv2.IMREAD_COLOR)
+        cv2.imshow("esp32cam", img)
 
 def main():
     client_id = f'python-mqtt-{random.randint(0, 1000)}'  # 客户端id不能重复
