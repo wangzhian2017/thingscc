@@ -22,15 +22,21 @@ def on_message(client, userdata, msg):
         #     content=f.read()
         #     print(binascii.hexlify(content))
 
-        # data = binascii.a2b_hex(msg.payload)
-        # with open('data/image.jpg', 'ab') as f:
-        #     f.write(data)
-        # img = cv2.imread('data/image.jpg')
-        # cv2.imshow("arm_camera", img)
+        data = binascii.a2b_hex(msg.payload)
+        with open('data/image.jpg', 'ab') as f:
+            f.write(data)
+        img = cv2.imread('data/image.jpg')
+        cv2.imshow("arm_camera", img)
+        cv2.waitKey(1)
 
-        data=np.frombuffer(msg.payload,dtype=np.uint16)
-        img=cv2.imdecode(data,cv2.IMREAD_COLOR)
-        cv2.imshow("esp32cam", img)
+        # payload=msg.payload
+        # frame =cv2.imread("data/test.png")
+        # payload=frame.tobytes()
+        # data=np.frombuffer(payload,dtype=np.uint8)
+        # img = data.reshape(192, 192, 3)
+        # # img=cv2.imdecode(data,cv2.IMREAD_COLOR)
+        # cv2.imshow("esp32cam", img)
+        # cv2.waitKey(1)
 
 def main():
     client_id = f'python-mqtt-{random.randint(0, 1000)}'  # 客户端id不能重复
