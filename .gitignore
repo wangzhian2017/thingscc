@@ -5,3 +5,6 @@ device-mediapipe/__pycache__/feishu.cpython-38.pyc
 *.pyc
 *.spec
 device-mediapipe/data/
+device-esp32c3/.pio/build/
+*.dat
+*.clang-format
