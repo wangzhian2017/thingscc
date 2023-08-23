@@ -28,7 +28,6 @@ const char *password = "13580416614";      //wifi密码
 #define CAM_PIN_HREF 23
 #define CAM_PIN_PCLK 22
 
-WiFiClient espClient;
 MQTT *mqtt;
 
 // 连接WIFI相关函数
@@ -104,7 +103,7 @@ void snap(){
 void setup() {
     Serial.begin(115200);
     wifi_connnet();
-    mqtt = new MQTT(mqtt_clientid,mqtt_username,mqtt_password,espClient);
+    mqtt = new MQTT(mqtt_clientid,mqtt_username,mqtt_password);
 
     camera_init();
 }

@@ -8,3 +8,5 @@ device-mediapipe/data/
 device-esp32c3/.pio/build/
 *.dat
 *.clang-format
+device-esp32c3/.pio/
+device-esp32c3/.vscode/

@@ -1,12 +1,12 @@
 #include "mqtt.h"
 
 
-MQTT::MQTT(const char *client_id,const char *user_name,const char *password,WiFiClient& wifi){
+MQTT::MQTT(const char *client_id,const char *user_name,const char *password){
     this->client_id=client_id;
     this->user_name=user_name;
     this->password=password;
 
-    this->mqtt_client.setClient(wifi);
+    this->mqtt_client.setClient(espClient);
     this->mqtt_client.setServer(this->mqtt_server, this->mqtt_port);                   //设置客户端连接的服务器,连接MQTT服务器
     this->mqtt_client.connect(this->client_id, this->user_name, this->password); //客户端连接到指定的产品的指定设备.同时输入鉴权信息
     if (this->mqtt_client.connected())

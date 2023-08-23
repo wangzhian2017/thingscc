@@ -15,8 +15,9 @@ private:
     const char *user_name;
     const char *password;
     PubSubClient mqtt_client;
+    WiFiClient espClient;
 public:
-    MQTT(const char *client_id,const char *user_name,const char *password,WiFiClient& wifi);
+    MQTT(const char *client_id,const char *user_name,const char *password);
     ~MQTT();
 
     bool isConnected();
