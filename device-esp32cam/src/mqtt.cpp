@@ -20,6 +20,7 @@ MQTT::MQTT(const char *client_id,const char *user_name,const char *password){
 
 MQTT::~MQTT()
 {
+   
 }
 
 bool MQTT::isConnected(){

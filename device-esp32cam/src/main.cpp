@@ -115,11 +115,12 @@ void loop() {
   }
   if (!(mqtt->isConnected())) //如果客户端没连接MQTT, 重新连接
   {
-      Serial.println("oneNET connect");
+      Serial.println("mqtt connecting");
       mqtt->connect();
       delay(1000);
   }
 
+  Serial.println("loop");
   snap();
 
   delay(1000); 

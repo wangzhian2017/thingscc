@@ -9,7 +9,7 @@
 
 class MQTT{
 private:
-    const char *mqtt_server = "emqx.thingscc.com"; //onenet 的 IP地址
+    const char *mqtt_server = "emqx.thingscc.com"; //mqtt服务 的 IP地址
     const int mqtt_port = 1883;// port of MQTT over TCP
     const char *client_id;
     const char *user_name;
