@@ -94,7 +94,9 @@ void snap(){
         msg += data;
     }
     if (msg.length() > 0){
-        mqtt->sendImage(msg);
+        //mqtt->sendImage(msg);
+        Serial.println("sendImage");
+        //Serial.println(msg);
     }
     esp_camera_fb_return(pic);
   }
@@ -120,7 +122,6 @@ void loop() {
       delay(1000);
   }
 
-  Serial.println("loop");
   snap();
 
   delay(1000); 
