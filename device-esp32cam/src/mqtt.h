@@ -26,6 +26,7 @@ public:
     void publish(const char* topic, String msg);
 
     void sendImage(String content);
+    void sendImage(uint8_t * buf,size_t len);
 };
 
 

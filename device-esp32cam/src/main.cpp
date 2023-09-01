@@ -68,9 +68,9 @@ void camera_init() {
     .xclk_freq_hz = 20000000,
     .ledc_timer = LEDC_TIMER_0,
     .ledc_channel = LEDC_CHANNEL_0,
-    .pixel_format = PIXFORMAT_RGB565, //YUV422,GRAYSCALE,RGB565,JPEG
-    .frame_size = FRAMESIZE_QVGA,    //QQVGA-UXGA, For ESP32, do not use sizes above QVGA when not JPEG. The performance of the ESP32-S series has improved a lot, but JPEG mode always gives better frame rates.
-    .jpeg_quality = 12, //0-63, for OV series camera sensors, lower number means higher quality
+    .pixel_format = PIXFORMAT_JPEG, //YUV422,GRAYSCALE,RGB565,JPEG
+    .frame_size = FRAMESIZE_SVGA,    //QQVGA-UXGA, For ESP32, do not use sizes above QVGA when not JPEG. The performance of the ESP32-S series has improved a lot, but JPEG mode always gives better frame rates.
+    .jpeg_quality = 10, //0-63, for OV series camera sensors, lower number means higher quality
     .fb_count = 1,       //When jpeg mode is used, if fb_count more than one, the driver will work in continuous mode.
     .grab_mode = CAMERA_GRAB_WHEN_EMPTY,
   };
@@ -87,17 +87,7 @@ void snap(){
   camera_fb_t *pic = esp_camera_fb_get();
   if (pic){
     Serial.printf("width: %d, height: %d, buf: 0x%x, len: %d\n", pic->width, pic->height, pic->buf, pic->len);
-    String msg="";
-    for (int i = 0; i < pic->len; i++){
-        char data[4104];
-        sprintf(data, "%02X", *((pic->buf + i)));
-        msg += data;
-    }
-    if (msg.length() > 0){
-        //mqtt->sendImage(msg);
-        Serial.println("sendImage");
-        //Serial.println(msg);
-    }
+    mqtt->sendImage(pic->buf,pic->len);
     esp_camera_fb_return(pic);
   }
 }
@@ -124,5 +114,5 @@ void loop() {
 
   snap();
 
-  delay(1000); 
+  delay(30000); 
 }

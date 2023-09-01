@@ -10,3 +10,4 @@ device-esp32c3/.pio/build/
 *.clang-format
 device-esp32c3/.pio/
 device-esp32c3/.vscode/
+device-esp32cam/.vscode/

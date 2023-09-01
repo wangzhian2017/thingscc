@@ -42,6 +42,14 @@ def on_message(client, userdata, msg):
         # cv2.imshow("esp32cam", img)
         # cv2.waitKey(1)
 
+        # data="FFD8FFE000104A46494600010101000000000000FFDB"
+        # data=data.strip()
+        # data=data.replace(' ', '')
+        # data=data.replace('\n', '')
+        # data = binascii.a2b_hex(data)
+        # with open('image.jpg', 'wb') as image_file:
+        #     image_file.write(data)
+
 def main():
     client_id = f'python-mqtt-{random.randint(0, 1000)}'  # 客户端id不能重复
     username = "thingscc"

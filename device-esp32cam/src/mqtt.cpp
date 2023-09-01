@@ -64,4 +64,25 @@ void MQTT::sendImage(String content){
     publish(topic,content);
 }
 
+void MQTT::sendImage(uint8_t * buf,size_t len){
+    char topic[300];
+    sprintf(topic, TOPIC_IMAGE_POST, this->user_name, this->client_id);
+    int pkg_size=200;
+    int sendLen=0;
+    this->mqtt_client.publish(topic,"begin");
+    while (len>sendLen)
+    {
+        buf+=sendLen;
+        if(len-sendLen>pkg_size){
+            this->mqtt_client.publish(topic,buf,pkg_size);
+        }else{
+            this->mqtt_client.publish(topic,buf,len-sendLen);
+        }
+        sendLen+=pkg_size;
+    }
+    this->mqtt_client.publish(topic,"end");
+    
+    Serial.println(topic);
+}
+
 
