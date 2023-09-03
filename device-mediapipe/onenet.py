@@ -97,6 +97,8 @@ def process(hd,frame_shape,center,width,min_pinch):
         backforward(angle)
         #食指与拇指 捏在一起的程度
         pinch=hd.distance(8,4)
+        if hd.is_fist():
+            pinch=min_pinch
         max_pinch=2*hd.distance(17,0)
         angle=np.interp(pinch,[min_pinch,max_pinch],[122,0])
         grab(angle)

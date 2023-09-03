@@ -90,6 +90,10 @@ class handdetector:
             
         return direction
     
+    def is_fist(self):
+        direction=self.analy_direction()
+        return direction==[0, 0, 0, 0, 0]
+
     def is_finger_open(self,index):
         '''
         index: 0拇指 1食指 2中指 3无名指 4小指
