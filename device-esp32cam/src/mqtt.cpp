@@ -61,24 +61,40 @@ void MQTT::publish(const char* topic, String msg){
 void MQTT::sendImage(String content){
     char topic[300];
     sprintf(topic, TOPIC_IMAGE_POST, this->user_name, this->client_id);
-    publish(topic,content);
+    
+    int content_len=content.length();
+    int pkg_size=200;
+    int pkg_num=content_len/pkg_size;
+    this->mqtt_client.beginPublish(topic,content_len,true);
+    for(int i=0;i<pkg_num;i++){
+        this->mqtt_client.print(content.substring(i*pkg_size,(i+1)*pkg_size));
+    }
+    this->mqtt_client.print(content.substring(pkg_num*pkg_size));
+    this->mqtt_client.endPublish();
 }
 
 void MQTT::sendImage(uint8_t * buf,size_t len){
     char topic[300];
     sprintf(topic, TOPIC_IMAGE_POST, this->user_name, this->client_id);
     int pkg_size=200;
-    int sendLen=0;
-    this->mqtt_client.publish(topic,"begin");
-    while (len>sendLen)
+    int pkg_total=len/pkg_size;
+    if(len%pkg_size>0){
+        pkg_total+=1;
+    }
+    char msg[300];
+    sprintf(msg, "{'pkg_size':%d,'pkg_total':%d}",pkg_size, pkg_total);
+    this->mqtt_client.publish(topic,msg);
+
+    int sent_len=0;
+    while (len>sent_len)
     {
-        buf+=sendLen;
-        if(len-sendLen>pkg_size){
+        buf+=sent_len;
+        if(len-sent_len>pkg_size){
             this->mqtt_client.publish(topic,buf,pkg_size);
         }else{
-            this->mqtt_client.publish(topic,buf,len-sendLen);
+            this->mqtt_client.publish(topic,buf,len-sent_len);
         }
-        sendLen+=pkg_size;
+        sent_len+=pkg_size;
     }
     this->mqtt_client.publish(topic,"end");
     

@@ -87,7 +87,18 @@ void snap(){
   camera_fb_t *pic = esp_camera_fb_get();
   if (pic){
     Serial.printf("width: %d, height: %d, buf: 0x%x, len: %d\n", pic->width, pic->height, pic->buf, pic->len);
-    mqtt->sendImage(pic->buf,pic->len);
+
+    if(pic->len > 0){
+      String content="";
+      for(int i=0;i<pic->len;i++){
+        char data[1];
+        sprintf(data,"%02X",*(pic->buf+i));
+        content+=data;
+      }
+     
+      mqtt->sendImage(content);
+    }
+    
     esp_camera_fb_return(pic);
   }
 }

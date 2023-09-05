@@ -26,13 +26,6 @@ def on_message(client, userdata, msg):
         #     content=f.read()
         #     print(binascii.hexlify(content))
 
-        data = binascii.a2b_hex(msg.payload)
-        with open('data/image.jpg', 'ab') as f:
-            f.write(data)
-        img = cv2.imread('data/image.jpg')
-        cv2.imshow("arm_camera", img)
-        cv2.waitKey(1)
-
         # payload=msg.payload
         # frame =cv2.imread("data/test.png")
         # payload=frame.tobytes()
@@ -42,13 +35,16 @@ def on_message(client, userdata, msg):
         # cv2.imshow("esp32cam", img)
         # cv2.waitKey(1)
 
-        # data="FFD8FFE000104A46494600010101000000000000FFDB"
-        # data=data.strip()
-        # data=data.replace(' ', '')
-        # data=data.replace('\n', '')
-        # data = binascii.a2b_hex(data)
-        # with open('image.jpg', 'wb') as image_file:
-        #     image_file.write(data)
+        data=msg.payload
+        data=data.strip()
+        data=data.replace(' ', '')
+        data=data.replace('\n', '')
+        data = binascii.a2b_hex(data)
+        with open('data/image.jpg', 'wb') as f:
+            f.write(data)
+        img = cv2.imread('data/image.jpg')
+        cv2.imshow("arm_camera", img)
+        cv2.waitKey(1)
 
 def main():
     client_id = f'python-mqtt-{random.randint(0, 1000)}'  # 客户端id不能重复
