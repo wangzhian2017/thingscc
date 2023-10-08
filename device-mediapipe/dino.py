@@ -11,10 +11,7 @@ def main():
     win.type_keys('chrome://dino/')
     win.type_keys('{ENTER}')
 
-    time.sleep(1)
     win=app['chrome://dino/ - Network error - Google ChromePane']
-    win.type_keys('{SPACE}')
-
     while(True):
         time.sleep(3)
         win.type_keys('{SPACE}')
