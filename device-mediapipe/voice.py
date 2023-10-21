@@ -72,22 +72,37 @@ def speech_recognition(fp, lang):
 
 
 def process(cmd): 
-    if "抓住" in cmd:
-        arm.grab(180.0)
-    if "松开" in cmd:
-        arm.grab(0.0)
-    if "上" in cmd:
-        arm.lift(180.0)
-    if "下" in cmd:
-        arm.lift(0.0)
-    if "左" in cmd:
-        arm.rotate(180.0)
-    if "右" in cmd:
-        arm.rotate(0.0)
-    if "前" in cmd:
-        arm.backforward(180.0)
-    if "后" in cmd:
-        arm.backforward(0.0)
+    if "抓" in cmd:
+        arm.grab(90.0)
+        arm.position_move(90.0,150.0,60.0)
+        time.sleep(2)
+        arm.grab(110.0)
+        time.sleep(1)
+        arm.position_move(90.0,90.0,90.0)
+    if "放" in cmd:
+        arm.position_move(50.0,150.0,60.0)
+        time.sleep(3)
+        arm.grab(90.0)
+        time.sleep(1)
+        arm.position_move(50.0,90.0,90.0)
+        time.sleep(1)
+        arm.position_move(90.0,90.0,90.0)
+    # if "抓住" in cmd:
+    #     arm.grab(180.0)
+    # if "松开" in cmd:
+    #     arm.grab(0.0)
+    # if "上" in cmd:
+    #     arm.lift(180.0)
+    # if "下" in cmd:
+    #     arm.lift(0.0)
+    # if "左" in cmd:
+    #     arm.rotate(180.0)
+    # if "右" in cmd:
+    #     arm.rotate(0.0)
+    # if "前" in cmd:
+    #     arm.backforward(180.0)
+    # if "后" in cmd:
+    #     arm.backforward(0.0)
     if "停" in cmd:
         arm.stop()
 

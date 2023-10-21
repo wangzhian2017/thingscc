@@ -74,7 +74,7 @@ def process(hd,frame_shape,center,width,min_pinch):
         max_palm_width=7*width/4
         palm_width=hd.distance(5,17)#手掌四指宽度
         angle2=np.interp(palm_width,[min_palm_width,max_palm_width],[75,140])
-        if abs(last_position_angle1-angle1)>5 or abs(last_position_angle2-angle2)>5 or abs(last_position_angle3-angle3)>5 :
+        if abs(last_position_angle1-angle1)>2 or abs(last_position_angle2-angle2)>5 or abs(last_position_angle3-angle3)>2 :
             position_move(angle1,angle2,angle3)
             last_position_angle1,last_position_angle2,last_position_angle3=angle1,angle2,angle3
 

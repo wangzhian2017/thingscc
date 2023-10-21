@@ -56,11 +56,15 @@ float ServoJoint::execute(){
         {
             this->angle=this->expect_angle;
         }
-        else if(diff>0){
-            this->angle+=this->inc_angle;
-        }else {
-            this->angle-=this->inc_angle;
+        else 
+        {
+            if(diff>0){
+                this->angle+=this->inc_angle;
+            }else {
+                this->angle-=this->inc_angle;
+            }
         }
+        
         
         if(this->angle<this->min_angle){
             this->angle=this->min_angle;
