@@ -5,7 +5,8 @@ import time
 from arm.feishu import feishu
 from arm.mechanical_arm import mechanical_arm
 
-base_url="http://localhost:8080"
+# base_url="http://localhost:8080/device/onnet"
+base_url="https://ncoa-dev.cmhktry.com/gateway/smallfeat/OneNet"
 product_id="iqDUVzCjyD"
 device_name="esp32c3"
 arm=mechanical_arm(base_url,product_id,device_name)

@@ -7,69 +7,50 @@ from arm.hand_detector import handdetector
 import time
 from arm.mechanical_arm import mechanical_arm
 
-base_url="http://localhost:8080"
+# base_url="http://localhost:8080/device/onnet"
+base_url="https://ncoa-dev.cmhktry.com/gateway/smallfeat/OneNet"
 product_id="iqDUVzCjyD"
 device_name="esp32c3"
 arm=mechanical_arm(base_url,product_id,device_name)
 
 grab_queue = Queue(3)
-lift_queue = Queue(3)
-rotate_queue = Queue(3)
-backforward_queue = Queue(3)
+position_move_queue = Queue(3)
 
 def call_service_task():
     while True:
+        if not position_move_queue.empty() :
+            obj = position_move_queue.get()
+            arm.position_move(obj["param"]["angle1"],obj["param"]["angle2"],obj["param"]["angle3"])
+            position_move_queue.task_done()
         if not grab_queue.empty() :
             obj = grab_queue.get()
             arm.grab(obj["param"]["angle"])
             grab_queue.task_done()
-        if not lift_queue.empty() :
-            obj = lift_queue.get()
-            arm.lift(obj["param"]["angle"])
-            lift_queue.task_done()
-        if not rotate_queue.empty() :
-            obj = rotate_queue.get()
-            arm.rotate(obj["param"]["angle"])
-            rotate_queue.task_done()
-        if not backforward_queue.empty() :
-            obj = backforward_queue.get()
-            arm.backforward(obj["param"]["angle"])
-            backforward_queue.task_done()
+        
+      
 
 def grab(angle):
-    angle=round(angle,2)
     param={'angle':angle}
     #return call_service('grab',param)
     if grab_queue.full()==False:
         grab_queue.put({"identifier":"grab","param":param})
 
-def lift(angle):
-    angle=round(angle,2)
-    param={'angle':angle}
-    #return call_service('lift',param)
-    if lift_queue.full()==False:
-        lift_queue.put({"identifier":"lift","param":param})
+def position_move(angle1,angle2,angle3):
+    param={'angle1':angle1,'angle2':angle2,'angle3':angle3}
+    #return call_service('position_move',param)
+    if position_move_queue.full()==False:
+        position_move_queue.put({"identifier":"position_move","param":param})
 
-
-def rotate(angle):
-    angle=round(angle,2)
-    param={'angle':angle}
-    #return call_service('rotate',param)
-    if rotate_queue.full()==False:
-        rotate_queue.put({"identifier":"rotate","param":param})
-
-def backforward(angle):
-    angle=round(angle,2)
-    param={'angle':angle}
-    #return call_service('backforward',param)
-    if backforward_queue.full()==False:
-        backforward_queue.put({"identifier":"backforward","param":param})
 
 
 pre_time = 0
 cur_time = 0
+last_grab_angle=0
+last_position_angle1=0
+last_position_angle2=0
+last_position_angle3=0
 def process(hd,frame_shape,center,width,min_pinch): 
-    global pre_time,cur_time
+    global pre_time,cur_time,last_grab_angle,last_position_angle1,last_position_angle2,last_position_angle3
     cur_time=time.time()
     if  (cur_time - pre_time)>1:
         h, w, c =frame_shape #画板大小
@@ -85,23 +66,30 @@ def process(hd,frame_shape,center,width,min_pinch):
         else:
             max_y=center_y+7*h/8
         x,y=hd.point(5) #掌心位置
-        angle=np.interp(x,[min_x,max_x],[180,0])
-        rotate(angle)
-        angle=np.interp(y,[min_y,max_y],[95,10])
-        lift(angle)
+        angle1=np.interp(x,[min_x,max_x],[180,0])
+        angle3=np.interp(y,[min_y,max_y],[95,10])
+
         #手掌宽度
         min_palm_width=3*width/4
         max_palm_width=7*width/4
         palm_width=hd.distance(5,17)#手掌四指宽度
-        angle=np.interp(palm_width,[min_palm_width,max_palm_width],[75,140])
-        backforward(angle)
+        angle2=np.interp(palm_width,[min_palm_width,max_palm_width],[75,140])
+        if abs(last_position_angle1-angle1)>5 or abs(last_position_angle2-angle2)>5 or abs(last_position_angle3-angle3)>5 :
+            position_move(angle1,angle2,angle3)
+            last_position_angle1,last_position_angle2,last_position_angle3=angle1,angle2,angle3
+
+
         #食指与拇指 捏在一起的程度
         pinch=hd.distance(8,4)
         if hd.is_fist():
             pinch=min_pinch
         max_pinch=2*hd.distance(17,0)
-        angle=np.interp(pinch,[min_pinch,max_pinch],[122,0])
-        grab(angle)
+        angle=np.interp(pinch,[min_pinch,max_pinch],[122,70])
+        if abs(last_grab_angle-angle)>5 :
+            grab(angle)
+            last_grab_angle=angle
+        
+        
 
         pre_time=cur_time
 

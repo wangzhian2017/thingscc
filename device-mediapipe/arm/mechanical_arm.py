@@ -11,7 +11,7 @@ class mechanical_arm:
     def call_service(self,identifier,json_param):
         try:
             print(identifier,json_param)
-            url=self.base_url+"/device/onnet/service/"+self.product_id+"/"+self.device_name+"/"+identifier
+            url=self.base_url+"/service/"+self.product_id+"/"+self.device_name+"/"+identifier
             r = requests.post(url,json = json_param, headers= {'Content-Type':'application/json;charset=UTF-8'})
             # print(r.json())
         
@@ -42,4 +42,12 @@ class mechanical_arm:
     def stop(self):
         param={}
         return self.call_service('stop',param)
+    
+    # 空间位置运动
+    def position_move(self,angle1,angle2,angle3):
+        angle1=np.round(angle1,2)
+        angle2=np.round(angle2,2)
+        angle3=np.round(angle3,2)
+        param={'angle1':angle1,'angle2':angle2,'angle3':angle3}
+        return self.call_service('position_move',param)
     

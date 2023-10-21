@@ -55,6 +55,10 @@ void OneNET::subscribe(){
     sprintf(topic, ONENET_TOPIC_PROP_GET, this->user_name, this->client_id);
     Serial.println(topic);
     this->mqtt_client.subscribe(topic);
+
+    sprintf(topic, ONENET_TOPIC_SERVICE_POSITION_MOVE, this->user_name, this->client_id);
+    Serial.println(topic);
+    this->mqtt_client.subscribe(topic);
     sprintf(topic, ONENET_TOPIC_SERVICE_GRAB, this->user_name, this->client_id);
     Serial.println(topic);
     this->mqtt_client.subscribe(topic);
@@ -124,6 +128,27 @@ void OneNET::callback(char *topic, byte *payload, unsigned int length,Arm arm){
     {
         String str = objJSON["data"]["motor_num"]["value"];
         Serial.println(str);
+    }
+
+    sprintf(target, ONENET_TOPIC_SERVICE_POSITION_MOVE, this->user_name, this->client_id);
+    if (strstr(topic, target))
+    {
+        String id = objJSON["id"];
+        Serial.println(id);
+
+        String s1=objJSON["params"]["angle1"];
+        float angle1=s1.toFloat();
+        String s2=objJSON["params"]["angle2"];
+        float angle2=s2.toFloat();
+        String s3=objJSON["params"]["angle3"];
+        float angle3=s3.toFloat();
+        bool ret= arm.positionMoveByAngel(angle1,angle2,angle3);
+        
+        char sendbuf[100];
+        sprintf(sendbuf, "{\"id\": \"%s\",\"code\":200,\"msg\":\"success\",\"data\":{\"result\":%s}}", id.c_str(), "true");
+        Serial.println(sendbuf);
+        sprintf(re, ONENET_TOPIC_SERVICE_POSITION_MOVE_RE, this->user_name, this->client_id);
+        this->mqtt_client.publish(re, sendbuf);
     }
     sprintf(target, ONENET_TOPIC_SERVICE_GRAB, this->user_name, this->client_id);
     if (strstr(topic, target))

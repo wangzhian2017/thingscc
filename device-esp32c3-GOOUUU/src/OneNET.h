@@ -23,6 +23,9 @@
 #define ONENET_TOPIC_DESIRED_DEL "$sys/%s/%s/thing/property/desired/delete"
 //设备期望值删除响应主题
 #define ONENET_TOPIC_DESIRED_DEL_RE "$sys/%s/%s/thing/property/desired/delete/reply"
+//空间位置移动
+#define ONENET_TOPIC_SERVICE_POSITION_MOVE "$sys/%s/%s/thing/service/position_move/invoke"
+#define ONENET_TOPIC_SERVICE_POSITION_MOVE_RE "$sys/%s/%s/thing/service/position_move/invoke_reply"
 //爪子张合  平台调用直连设备服务(下发数据并期望设备执行完成后给出响应)
 #define ONENET_TOPIC_SERVICE_GRAB "$sys/%s/%s/thing/service/grab/invoke"
 #define ONENET_TOPIC_SERVICE_GRAB_RE "$sys/%s/%s/thing/service/grab/invoke_reply"
@@ -38,6 +41,7 @@
 //全部停止转动
 #define ONENET_TOPIC_SERVICE_STOP "$sys/%s/%s/thing/service/stop/invoke"
 #define ONENET_TOPIC_SERVICE_STOP_RE "$sys/%s/%s/thing/service/stop/invoke_reply"
+
 
 
 //这是post上传数据使用的模板

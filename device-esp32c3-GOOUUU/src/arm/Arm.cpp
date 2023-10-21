@@ -51,6 +51,13 @@ bool Arm::stopAll(){
     return true;
 }
 
+bool Arm::positionMoveByAngel(float angle1,float angle2,float angle3){
+    float r1=rotate_joint->actToAngle(angle1);
+    float r2=backforward_joint->actToAngle(angle2);
+    float r3=lift_joint->actToAngle(angle3);
+    return true;
+}
+
 void Arm::initialization(float angle_grab,float angle_lift,float angle_rotate,float angle_backforward){
     grab_joint->actToAngle(angle_grab,true);
     lift_joint->actToAngle(angle_lift,true);
@@ -70,7 +77,7 @@ void Arm::act(){
     float included_angle=lift_angle+backforward_angle-90;//两轴夹角度数
     if(lift_direction<0||backforward_direction<0){
         //两轴夹角正在变小
-        if(included_angle>80){
+        if(included_angle>50){
             lift_joint->execute();
             backforward_joint->execute();
         }else{
