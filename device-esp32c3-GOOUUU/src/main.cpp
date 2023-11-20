@@ -15,8 +15,8 @@ const char *password = "13580416614";      //wifi密码
 //鉴权信息
 //#define mqtt_password "version=2018-10-31&res=products%2FiqDUVzCjyD%2Fdevices%2Fesp32c3&et=1697727629&method=sha1&sign=kI1W4UKGFq8B10XejD%2BpYDWsh4c%3D" //鉴权信息
 #define device_key "V1pqR1doaXpKTjRTbVFkWW5mcXRCUTZXMkZmeHdxVmQ="
-// #define token_url "http://master.thingscc.com:8080/device/onnet/token/" mqtt_username "/" mqtt_clientid "/" device_key
-#define token_url "https://ncoa-dev.cmhktry.com/gateway/smallfeat/OneNet/token/" mqtt_username "/" mqtt_clientid "/" device_key
+#define token_url "http://master.thingscc.com:8080/device/onnet/token/" mqtt_username "/" mqtt_clientid "/" device_key
+// #define token_url "https://ncoa-dev.cmhktry.com/gateway/smallfeat/OneNet/token/" mqtt_username "/" mqtt_clientid "/" device_key
 
 
 WiFiClient espClient;

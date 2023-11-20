@@ -5,8 +5,8 @@ import time
 from arm.feishu import feishu
 from arm.mechanical_arm import mechanical_arm
 
-# base_url="http://localhost:8080/device/onnet"
-base_url="https://ncoa-dev.cmhktry.com/gateway/smallfeat/OneNet"
+base_url="http://localhost:8080/device/onnet"
+# base_url="https://ncoa-dev.cmhktry.com/gateway/smallfeat/OneNet"
 product_id="iqDUVzCjyD"
 device_name="esp32c3"
 arm=mechanical_arm(base_url,product_id,device_name)
@@ -74,9 +74,9 @@ def speech_recognition(fp, lang):
 def process(cmd): 
     if "抓" in cmd:
         arm.grab(90.0)
-        arm.position_move(90.0,150.0,60.0)
+        arm.position_move(90.0,150.0,70.0)
         time.sleep(2)
-        arm.grab(110.0)
+        arm.grab(105.0)
         time.sleep(1)
         arm.position_move(90.0,90.0,90.0)
     if "放" in cmd:
