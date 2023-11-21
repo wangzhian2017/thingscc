@@ -3,7 +3,7 @@ import os
 import gym
 from gym import error, spaces
 from collections import deque
-
+from typing import Optional
 from io import BytesIO
 from PIL import Image
 import base64
@@ -28,6 +28,8 @@ class ChromeDinoEnv(gym.Env):
             screen_height: int=120,
             chromedriver_path: str="chromedriver"
         ):
+        super(ChromeDinoEnv, self).__init__()
+        
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.chromedriver_path = chromedriver_path
