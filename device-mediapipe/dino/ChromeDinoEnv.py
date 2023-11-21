@@ -16,6 +16,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
+from selenium.common.exceptions import WebDriverException
 
 import time
 
@@ -59,7 +60,11 @@ class ChromeDinoEnv(gym.Env):
         self.keyup_actions = [action_chains.key_up(item) for item in self.actions_map]
 
     def reset(self):
-        self._driver.get('chrome://dino')
+        try:
+            self._driver.get('chrome://dino')
+        except WebDriverException:
+            pass
+
         WebDriverWait(self._driver, 10).until(
             EC.presence_of_element_located((
                 By.CLASS_NAME, 
@@ -68,7 +73,7 @@ class ChromeDinoEnv(gym.Env):
         )
 
         # trigger game start
-        self._driver.find_element_by_tag_name("body").send_keys(Keys.SPACE)
+        self._driver.find_element(By.TAG_NAME,"body").send_keys(Keys.SPACE)
 
         return self._next_observation()
 
@@ -105,7 +110,7 @@ class ChromeDinoEnv(gym.Env):
         return not self._driver.execute_script("return Runner.instance_.playing")
 
     def step(self, action: int):
-        self._driver.find_element_by_tag_name("body") \
+        self._driver.find_element(By.TAG_NAME,"body") \
             .send_keys(self.actions_map[action])
 
         obs = self._next_observation()
