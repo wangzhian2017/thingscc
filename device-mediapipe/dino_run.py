@@ -69,12 +69,15 @@ def main():
     
     env.render_mode='rgb_array'
     img = model.env.render(mode='rgb_array')
-    for i in tqdm(range(100)):
+    dones=False
+    while not dones:
+    # for i in tqdm(range(100)):
         images.append(img)
         action, _states = model.predict(obs, deterministic=True)
         obs, rewards, dones, info = env.step(action)
         # env.render(mode='human')
         img = env.render(mode='rgb_array')
+    env.close()
     
     arr=[np.array(img) for i, img in enumerate(images)]
     
