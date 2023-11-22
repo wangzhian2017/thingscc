@@ -12,6 +12,19 @@ from stable_baselines3.common.callbacks import CheckpointCallback
 from dino.ChromeDinoEnv import ChromeDinoEnv
 
 from PIL import Image
+
+def createEnv():
+    env=ChromeDinoEnv(
+        screen_width=96,
+        screen_height=96,
+        chromedriver_path=os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            "dino",
+            "chromedriver.exe"
+        )
+    )
+    return env
+
 def main():
     # app = Application(backend="uia").start(r"C:\Program Files\Google\Chrome\Application\chrome.exe --force-renderer-accessibility") 
     # app = Application(backend="uia").connect(title='New Tab - Google Chrome',timeout=5)
@@ -24,19 +37,13 @@ def main():
     #     win.capture_as_image().save('test.png')
     #     win.type_keys('{SPACE}')
 
-    env_lambda = lambda: ChromeDinoEnv(
-        screen_width=96,
-        screen_height=96,
-        chromedriver_path=os.path.join(
-            os.path.dirname(os.path.abspath(__file__)),
-            "dino",
-            "chromedriver.exe"
-        )
-    )
+    env_lambda = lambda: createEnv()
+    
     do_train = False
     num_cpu = 1
     save_path = "chrome_dino_ppo_cnn"
     env = SubprocVecEnv([env_lambda for i in range(num_cpu)])
+    
 
     if do_train:
         checkpoint_callback = CheckpointCallback(
@@ -59,6 +66,8 @@ def main():
     model = PPO.load(save_path, env=env)
     images = []
     obs = env.reset()
+    
+    env.render_mode='rgb_array'
     img = model.env.render(mode='rgb_array')
     for i in tqdm(range(100)):
         images.append(img)

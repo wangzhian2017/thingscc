@@ -14,3 +14,4 @@ device-esp32cam/.vscode/
 device-mediapipe/test.png
 device-mediapipe/dino/chromedriver.exe
 *.zip
+device-mediapipe/dino.gif

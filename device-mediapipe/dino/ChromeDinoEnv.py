@@ -22,14 +22,15 @@ import time
 
 
 class ChromeDinoEnv(gym.Env):
-
+    metadata={'render.modes':['rgb_array'],'render_modes':['rgb_array']}
+   
     def __init__(self,
             screen_width: int=120,
             screen_height: int=120,
             chromedriver_path: str="chromedriver"
         ):
+      
         super(ChromeDinoEnv, self).__init__()
-        
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.chromedriver_path = chromedriver_path
@@ -126,14 +127,14 @@ class ChromeDinoEnv(gym.Env):
 
     def render(self, mode: str='human'):
         img = cv2.cvtColor(self._get_image(), cv2.COLOR_BGR2RGB)
-        if mode == 'rgb_array':
-            return img
-        elif mode == 'human':
+        if mode == 'human':
             from gym.envs.classic_control import rendering
             if self.viewer is None:
                 self.viewer = rendering.SimpleImageViewer()
             self.viewer.imshow(img)
             return self.viewer.isopen
+        else:
+            return img
 
     def close(self):
         if self.viewer is not None:
