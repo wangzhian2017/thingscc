@@ -26,14 +26,11 @@ def main():
     width= element.size["width"]
     # 执行滚动操作
     screenshot = Image.new('RGB', (width, height), (255, 255, 255))  
-    scroll_pixels = driver.get_window_size()['height']# 每次向下滚动的像素数量
-    print(scroll_pixels)
-
-    y=element.location["y"]
-    driver.execute_script("window.scrollTo(0, %d)" % y)  
-    time.sleep(1)  
+    page_y=element.location["y"]
     paste_position_y=0
     while paste_position_y<height:
+        driver.execute_script("window.scrollTo(0, %d)" % page_y)  
+        time.sleep(1)  
         element=driver.find_element(By.CLASS_NAME,"article")
         base64html=element.screenshot_as_base64
         screenshot_part=Image.open(io.BytesIO(base64.b64decode(base64html))).convert("RGB")
@@ -42,9 +39,8 @@ def main():
         if screenshot_part.height<=0:
             break
         paste_position_y+=screenshot_part.height
-        y+=screenshot_part.height
-        driver.execute_script("window.scrollTo(0, %d)" % y)  
-        time.sleep(1) 
+        page_y+=screenshot_part.height
+       
 
         
     # 保存截图 
