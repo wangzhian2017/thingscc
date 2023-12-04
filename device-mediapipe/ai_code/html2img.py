@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import requests
 import time
+import re
 from PIL import Image 
 import io
 import base64
@@ -18,7 +19,8 @@ def main():
     element=driver.find_element(By.CLASS_NAME,"article")
     # element.screenshot('C:\\bak\\test.png')
 
-    with open(r"C:\\bak\\test.txt","w",encoding="utf-8") as f:
+    title=re.sub(r'[^\w\s]', '', driver.title)
+    with open("C:\\bak\\%s.html" % title,"w",encoding="utf-8") as f:
         f.write(element.get_attribute("innerHTML"))
     
     # 获取网页高度  
@@ -44,7 +46,7 @@ def main():
 
         
     # 保存截图 
-    screenshot.save("C:\\bak\\test.png")  
+    screenshot.save("C:\\bak\\%s.png" % title)  
     driver.quit()
   
 
