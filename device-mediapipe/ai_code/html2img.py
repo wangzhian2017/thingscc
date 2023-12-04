@@ -42,18 +42,18 @@ def main():
     # # 保存截图 
     # screenshot.save("C:\\bak\\%s.png" % title)  
     # driver.quit()
-    
-    screenshot('https://www.runoob.com/cssref/css-reference.html','C:\\bak')
 
-def screenshot(url,save_path):
+    screenshot('https://www.runoob.com/cssref/css-reference.html','C:\\bak',By.CLASS_NAME,"article")
+
+def screenshot(url,save_path,find_element_by=By.TAG_NAME,find_element_vale="html",title=""):
     driver=webdriver.Chrome()
     driver.maximize_window()
     driver.get(url)
     time.sleep(2)
-    element=driver.find_element(By.TAG_NAME,"html")
+    element=driver.find_element(find_element_by,find_element_vale)
     # element.screenshot('C:\\bak\\test.png')
-
-    title=re.sub(r'[^\w\s]', '', driver.title)
+    if title=="":
+        title=re.sub(r'[^\w\s]', '', driver.title)
     with open(f"{save_path}\\{title}.html","w",encoding="utf-8") as f:
         f.write(element.get_attribute("outerHTML"))
     
@@ -66,7 +66,7 @@ def screenshot(url,save_path):
     while paste_position_y<height:
         driver.execute_script("window.scrollTo(0, %d)" % page_y)  
         time.sleep(1)  
-        element=driver.find_element(By.TAG_NAME,"html")
+        element=driver.find_element(find_element_by,find_element_vale)
         base64html=element.screenshot_as_base64
         screenshot_part=Image.open(io.BytesIO(base64.b64decode(base64html))).convert("RGB")
         screenshot.paste(screenshot_part, (0, paste_position_y)) 
