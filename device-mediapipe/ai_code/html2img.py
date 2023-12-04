@@ -43,7 +43,7 @@ def main():
     # screenshot.save("C:\\bak\\%s.png" % title)  
     # driver.quit()
 
-    screenshot('https://www.runoob.com/cssref/css-reference.html','C:\\bak',By.CLASS_NAME,"article")
+    screenshot('http://adminlte.la998.com/index.html','C:\\bak',By.CLASS_NAME,"content-wrapper")
 
 def screenshot(url,save_path,find_element_by=By.TAG_NAME,find_element_vale="html",title=""):
     driver=webdriver.Chrome()
